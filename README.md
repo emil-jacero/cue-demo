@@ -1,6 +1,6 @@
 # Cue Demo
 
-This demo borrows from this repo: <https://github.com/fluxcd/cues>
+This demo borrows a lot from this repo: <https://github.com/fluxcd/cues>
 
 ## Description
 

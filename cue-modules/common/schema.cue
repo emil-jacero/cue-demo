@@ -9,8 +9,8 @@ package common
 #OCISource: {
 	url:      string & =~"^oci://.*$"
 	ref?: null | #OCIRepositoryRef
-	user:     *"" | string
-	password: *"" | string
+	// user:     *"" | string
+	// password: *"" | string
 }
 
 #ModuleConfig: {
