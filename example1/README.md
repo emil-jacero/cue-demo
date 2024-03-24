@@ -78,7 +78,8 @@ cd $WDIR/example1
 cue mod tidy
 ```
 
-Run
+List all resources.
+This will go through all apps, bundles and flavors, unpack them into the individual apps and then list them.
 
 ```shell
 cue cmd ls
