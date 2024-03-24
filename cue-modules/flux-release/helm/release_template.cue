@@ -10,7 +10,7 @@ import (
 )
 
 #HelmRelease: fluxhelmv2beta2.#HelmRelease & {
-	_spec: #HelmConfig
+	_spec: #ReleaseConfig
 	_valuesFrom: [ string]: string
 	apiVersion: "helm.toolkit.fluxcd.io/v2beta2"
 	kind:       "HelmRelease"
@@ -53,7 +53,7 @@ import (
 }
 
 #ReleaseValues: corev1.#ConfigMap & {
-	_spec: #ReleaseSpec
+	_spec: #ReleaseConfig
 	let _values_yaml = yaml.Marshal(_spec.values)
 	let _values_sha = strings.Split(uuid.SHA1(uuid.ns.DNS, _values_yaml), "-")[0]
 	apiVersion: "v1"
@@ -71,7 +71,7 @@ import (
 }
 
 #ReleaseSecretValues: corev1.#Secret & {
-	_spec: #ReleaseSpec
+	_spec: #ReleaseConfig
 	let _values_yaml = yaml.Marshal(_spec.secretValues)
 	let _values_sha = strings.Split(uuid.SHA1(uuid.ns.DNS, _values_yaml), "-")[0]
 	apiVersion: "v1"
