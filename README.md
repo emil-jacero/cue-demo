@@ -11,17 +11,21 @@ This demo borrows some from this repo: <https://github.com/fluxcd/cues>
 
 ## Prepp
 
+### Registry
+
 Pull and run a docker registry
 
 ```shell
 docker run -d -p 5000:5000 --restart always --name registry registry:2
 ```
 
-Destroy registry
+Destroy registry to cleanup
 
 ```shell
 docker rm -f registry
 ```
+
+### Cue
 
 Enable the experimental cue modules support
 
