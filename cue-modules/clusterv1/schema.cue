@@ -25,7 +25,7 @@ import (
     domainSuffix: string
     labels:     {[string]: string}
     clusterOverrides: #ClusterOverrides
-	apps: {app.#AppConfig, ...}
-	bundles: {bundle.#BundleConfig, ...}
-    flavor: flavor.#FlavorConfig
+	apps?: {app.#AppConfig, ...}
+	bundles?: {bundle.#BundleConfig, ...}
+    flavor?: flavor.#FlavorConfig
 }

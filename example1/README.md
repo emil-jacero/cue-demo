@@ -67,7 +67,6 @@ cue mod publish v0.0.1
 cd $WDIR/cue-modules/clusterv0
 cue mod tidy
 cue mod publish v0.0.1
-
 ```
 
 ## Run example 1
