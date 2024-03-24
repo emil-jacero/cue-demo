@@ -78,7 +78,7 @@ cue mod tidy
 cue mod publish v0.0.1
 ```
 
-## Developing you own app
+## Developing your own app
 
 ### Prepp
 
