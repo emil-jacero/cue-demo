@@ -8,6 +8,8 @@ import (
 	apppodinfo "github.com/emil-jacero/cue-demo/apps/podinfo@v0"
 )
 
+#Clusters: [Cluster01]
+
 #clusterOverrides: cluster.#ClusterOverrides & {
     clusterName: "cl1"
     clusterRole: "prod"

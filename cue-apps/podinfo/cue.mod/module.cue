@@ -10,4 +10,8 @@ deps: {
 		v:       "v1.0.0"
 		default: true
 	}
+	"k8s.io@v1": {
+		v:       "v1.0.0"
+		default: true
+	}
 }

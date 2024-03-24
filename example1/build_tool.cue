@@ -8,14 +8,9 @@ import (
 	"tool/file"
 	"path"
 	// "encoding/yaml"
-
-	// kubernetes "k8s.io/apimachinery/pkg/runtime"
-
-	// timoniv1 "timoni.sh/core/v1alpha1"
-	// timoniextv1 "github.com/emil-jacero/timoni-ext/v1alpha1"
 )
 
-#Clusters: [Cluster01]
+#Clusters: [...]
 
 command: build: {
 	outDir: ".output"
@@ -69,9 +64,6 @@ command: ls: {
 				_app_chart_version: "\(v.spec.chart.version)"
 				_app_namespace: "\(v.spec.namespace)"
 				_app_repository: "\(v.spec.repository.url)"
-				// _tag: "\(v.source.tag)"
-				// _splitURL: strings.Split(_url, "/")
-				// _name: _splitURL[len(_splitURL) - 1]
 				"\(_cl_name) \t\(_app_name) \t\(_app_namespace) \t\(_app_chart_version) \t\(_app_repository)"
             }]
         }
@@ -86,82 +78,3 @@ command: ls: {
         }
     }
 }
-
-
-// cl1Devel: timoniextv1.#Cluster & {
-// 	apiVersion: "v1alpha1"
-// 	name: "cl1"
-// 	group: "devel"
-// 	instances: {
-//         "podinfo-redis": {
-//             instanceType: "bundle"
-//             source: {
-//                 url: "oci://localhost:5000/bundles/podinfo-redis"
-//                 tag: "1.0.0"
-//             }
-//             namespace: "podinfo-redis"
-//             values: {...}
-//         }
-//         "observability-aio": {
-//             instanceType: "bundle"
-//             source: {
-//                 url: "oci://localhost:5000/bundles/observability-aio"
-//                 tag: "0.1.0"
-//             }
-//             namespace: "obs"
-//             values: {...}
-//         }
-// 	}
-// }
-
-// cl1Staging: timoniextv1.#Cluster & {
-// 	apiVersion: "v1alpha1"
-// 	name: "cl1"
-// 	group: "staging"
-// 	instances: {
-//         "podinfo-redis": {
-//             instanceType: "bundle"
-//             source: {
-//                 url: "oci://localhost:5000/bundles/podinfo-redis"
-//                 tag: "1.0.0"
-//             }
-//             namespace: "podinfo-redis"
-//             values: {...}
-//         }
-//         "observability-aio": {
-//             instanceType: "bundle"
-//             source: {
-//                 url: "oci://localhost:5000/bundles/observability-aio"
-//                 tag: "0.1.0"
-//             }
-//             namespace: "obs"
-//             values: {...}
-//         }
-// 	}
-// }
-
-// clustersTest: [cl1Devel,cl1Staging]
-
-
-// command: lstest: {
-//     task: {
-//         gather: {
-//             items: [for cl in clustersTest for k, v in cl.instances {
-// 				_url: v.source.url
-// 				_tag: v.source.tag
-// 				_splitURL: strings.Split(_url, "/")
-// 				_name: _splitURL[len(_splitURL) - 1]
-// 				"\(cl.name)-\(cl.group) \t\(_name) \t\(_tag) \t\(_url)"
-//             }]
-//         }
-//         print: cli.Print & {
-//             $dep: gather
-//             text: tabwriter.Write([
-//                 "CLUSTER \tINSTANCE \tVERSION \tURL",
-//                 for a in gather.items {
-//                     "\(a)"
-//                 }
-//             ])
-//         }
-//     }
-// }
