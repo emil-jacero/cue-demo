@@ -87,6 +87,7 @@ go get -d k8s.io/api/core/v1
 go get -d k8s.io/api/apps/v1
 go get -d k8s.io/api/networking/v1
 go get -d k8s.io/apimachinery
+go get -d k8s.io/apiextensions-apiserver
 ```
 
 Optional: Generate cue schema from go modules
@@ -96,4 +97,5 @@ cue get go k8s.io/api/core/v1
 cue get go k8s.io/api/apps/v1
 cue get go k8s.io/api/networking/v1
 cue get go k8s.io/apimachinery/pkg/apis/meta/v1
+cue get go k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1
 ```
