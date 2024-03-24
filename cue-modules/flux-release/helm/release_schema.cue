@@ -4,13 +4,11 @@ import (
 	kubernetes "k8s.io/apimachinery/pkg/runtime"
 )
 
-#HelmConfig: {
-	_appConfig: #AppConfig
-
-	name:      *_appConfig.name | string & =~"^[a-z0-9]([a-z0-9\\-]){0,61}[a-z0-9]$"
-	namespace: *_appConfig.namespace | string & =~"^[a-z0-9]([a-z0-9\\-]){0,61}[a-z0-9]$"
+#ReleaseConfig: {
+	name:      string & =~"^[a-z0-9]([a-z0-9\\-]){0,61}[a-z0-9]$"
+	namespace: string & =~"^[a-z0-9]([a-z0-9\\-]){0,61}[a-z0-9]$"
 	targetNamespace?: string & =~"^[a-z0-9]([a-z0-9\\-]){0,61}[a-z0-9]$"
-	labels: _appConfig.labels & {
+	labels: {
 		"helmrelease.toolkit.fluxcd.io/name": *name | string,
 		...
 	}
@@ -30,7 +28,7 @@ import (
 	secretValues: *null | {...}
 }
 
-#HelmApp: {
+#ReleaseApp: {
 	spec: #HelmConfig
 	resources: [ID=_]:     kubernetes.#Object
 	valuesFrom: [ string]: string

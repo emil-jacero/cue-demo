@@ -2,12 +2,13 @@ package helm
 
 import (
 	corev1 "k8s.io/api/core/v1"
-	source "github.com/emil-jacero/cue-demo/fluxcd/source"
+	fluxsrcv1beta2 "github.com/fluxcd/source-controller/api/v1beta2"
+	// fluxsrcv1 "github.com/fluxcd/source-controller/api/v1"
 )
 
 #OCISecretName: "\(#HelmConfig.name)-oci-helm"
 
-#OCIRepository: source.#OCIRepository & {
+#OCIRepository: fluxsrcv1beta2.#OCIRepository & {
 	_spec:      #HelmConfig
 	metadata: {
 		name:        _spec.name
@@ -43,7 +44,7 @@ import (
 
 #HelmSecretName: "\(#HelmConfig.name)-helm"
 
-#HelmRepository: source.#HelmRepository & {
+#HelmRepository: fluxsrcv1beta2.#HelmRepository & {
 	_spec:      #HelmConfig
 	metadata: {
 		name:        _spec.name

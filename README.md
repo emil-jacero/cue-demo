@@ -23,14 +23,39 @@ Destroy registry
 docker rm -f registry
 ```
 
+Enable the experimental cue modules support
+
+```shell
+export CUE_EXPERIMENT=modules
+```
+
+Set the OCI registry URL.
+
+```shell
+export CUE_REGISTRY=localhost:5000/cue-demo
+```
+
+Set a working directory. This should be the root of the git repo!
+
+```shell
+export WDIR=$(pwd)
+```
+
 Upload supporting modules to the OCI registry. These modules are utilized by apps, bundles, flavors and cluster configurations.
 They are mostly schemas and therefor are very generalized.
 
 ```shell
-export CUE_EXPERIMENT=modules
-export CUE_REGISTRY=localhost:5000/cue-demo/modules
+cd $WDIR/cue-modules/k8s
+cue mod tidy
+cue mod publish v1.0.0
 
-export WDIR=$(pwd)
+cd $WDIR/cue-modules/fluxv2
+cue mod tidy
+cue mod publish v1.0.0
+
+cd $WDIR/cue-modules/flux-release
+cue mod tidy
+cue mod publish v0.0.1
 
 cd $WDIR/cue-modules/common
 cue mod tidy
@@ -47,10 +72,6 @@ cue mod publish v0.0.1
 cd $WDIR/cue-modules/flavor
 cue mod tidy
 cue mod publish v0.0.1
-
-cd $WDIR/cue-modules/fluxcd
-cue mod tidy
-cue mod publish v0.0.1
 ```
 
 ## Developing own app
@@ -64,8 +85,8 @@ Download go modules.
 export GO111MODULE=off
 go get -d k8s.io/api/core/v1
 go get -d k8s.io/api/apps/v1
-go get -d k8s.io/apimachinery
 go get -d k8s.io/api/networking/v1
+go get -d k8s.io/apimachinery
 ```
 
 Optional: Generate cue schema from go modules
@@ -73,6 +94,6 @@ Optional: Generate cue schema from go modules
 ```shell
 cue get go k8s.io/api/core/v1
 cue get go k8s.io/api/apps/v1
-cue get go k8s.io/apimachinery/pkg/apis/meta/v1
 cue get go k8s.io/api/networking/v1
+cue get go k8s.io/apimachinery/pkg/apis/meta/v1
 ```

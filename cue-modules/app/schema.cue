@@ -1,7 +1,7 @@
 package app
 
 import (
-	common "github.com/emil-jacero/cue-demo/common@v0"
+	common "github.com/emil-jacero/cue-demo/modules/common@v0"
 )
 
 #AppConfig: common.#Config & {
