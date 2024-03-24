@@ -13,6 +13,6 @@ import (
 		"flavor.emil-jacero.example/name": *name | string,
 		...
 	}
-	apps: {app.#AppConfig...}
-	bundles: {bundle.#BundleConfig...}
+	apps: {app.#AppConfig, ...}
+	bundles: {bundle.#BundleConfig, ...}
 }

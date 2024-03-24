@@ -11,4 +11,5 @@ import (
 		"app.emil-jacero.example/name": *name | string,
 		...
 	}
+	values: {...}
 }

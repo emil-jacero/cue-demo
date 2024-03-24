@@ -1,10 +1,8 @@
 package common
 
-#SemVer: string & =~"^v?(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(?:-((?:0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$"
-
 #OCIRepositoryRef: {
 	digest?: string
-	semver?: #SemVer
+	semver?: #SemVerString
 	tag?: string
 }
 

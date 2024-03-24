@@ -12,5 +12,5 @@ import (
 		"bundle.emil-jacero.example/name": *name | string,
 		...
 	}
-	apps: {app.#AppConfig...}
+	apps: {app.#AppConfig, ...}
 }
