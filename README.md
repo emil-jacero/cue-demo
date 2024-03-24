@@ -2,24 +2,24 @@
 
 ## Description
 
-This demo borrows some from this repo: <https://github.com/fluxcd/cues>
+This demo borrows from this repo: <https://github.com/fluxcd/cues>
 
 ## Dependencies
 
-- CUE == 0.8.0
 - go == 1.21.0
+- CUE == 0.8.0
 
 ## Prepp
 
 ### Registry
 
-Pull and run a docker registry
+Pull and run a docker registry.
 
 ```shell
 docker run -d -p 5000:5000 --restart always --name registry registry:2
 ```
 
-Destroy registry to cleanup
+Destroy registry to cleanup.
 
 ```shell
 docker rm -f registry
@@ -27,7 +27,7 @@ docker rm -f registry
 
 ### Cue
 
-Enable the experimental cue modules support
+Enable the experimental cue modules support.
 
 ```shell
 export CUE_EXPERIMENT=modules
