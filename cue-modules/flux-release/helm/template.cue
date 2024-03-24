@@ -6,10 +6,10 @@ import (
 	"encoding/yaml"
 
 	corev1 "k8s.io/api/core/v1"
-	fluxhelmv2beta2 "github.com/fluxcd/helm-controller/api/v2beta2"
+	fluxhrv2beta2 "github.com/fluxcd/helm-controller/api/v2beta2"
 )
 
-#HelmRelease: fluxhelmv2beta2.#HelmRelease & {
+#HelmRelease: fluxhrv2beta2.#HelmRelease & {
 	_spec: #ReleaseConfig
 	_valuesFrom: [ string]: string
 	apiVersion: "helm.toolkit.fluxcd.io/v2beta2"

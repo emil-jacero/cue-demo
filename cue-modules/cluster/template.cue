@@ -16,10 +16,9 @@ package cluster
     domainSuffix:  *#DefaultPublicDomainSuffix
     metadata:      #Labels
 
-    globalValues: {
-        clusterName:         string & =~"^[a-z0-9]([a-z0-9\\-]){0,61}[a-z0-9]$",
-        clusterRole:         string,
-        clusterPublicDomain: *"\(#name).\(#role).\(#domainSuffix)",
-        ...
+    clusterOverrides: {
+        clusterName: *name,
+        clusterRole: *role,
+        clusterFQDN: *"\(name).\(role).\(domainSuffix)",
     }
 }

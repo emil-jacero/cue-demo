@@ -1,5 +1,5 @@
 package app
 
 #App: {
-	config: #AppConfig
+	_config: #AppConfig
 }

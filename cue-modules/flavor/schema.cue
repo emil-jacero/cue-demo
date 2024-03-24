@@ -6,7 +6,7 @@ import (
 	bundle "github.com/emil-jacero/cue-demo/modules/bundle@v0"
 )
 
-#FlavorConfig: common.#Config & {
+#FlavorConfig: common.#ModuleConfig & {
 	name:      string & =~"^[a-z0-9]([a-z0-9\\-]){0,61}[a-z0-9]$"
 	namespace: *name
 	labels: {

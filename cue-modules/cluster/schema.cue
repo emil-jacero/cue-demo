@@ -7,20 +7,22 @@ import (
 	flavor "github.com/emil-jacero/cue-demo/modules/flavor@v0"
 )
 
+#ClusterOverrides: {
+    clusterName: string & =~"^[a-z0-9]([a-z0-9\\-]){0,61}[a-z0-9]$"
+    clusterRole: string & =~"^[a-z0-9]([a-z0-9\\-]){0,61}[a-z0-9]$"
+    clusterFQDN: string & =~"^[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9](?:\.[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])+$"
+    ...
+}
+
 #ClusterConfig: {
 	name:         string & =~"^[a-z0-9]([a-z0-9\\-]){0,61}[a-z0-9]$"
     role:         string & =~"^[a-z0-9]([a-z0-9\\-]){0,61}[a-z0-9]$",
     domainSuffix: string & =~"^[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9](?:\.[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])+$",
     metadata:     {string, string}
 
-    globalValues: {
-        clusterName:         name,
-        clusterRole:         role,
-        clusterPublicDomain: string & =~"^[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9](?:\.[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])+$",
-        ...
-    }
+    clusterOverrides: #ClusterOverrides
 
 	apps: {app.#AppConfig, ...}
-	bundles: {bundle.#BundleConfig, ...}
-    flavors: {flavor.#FlavorConfig, ...}
+	// bundles: {bundle.#BundleConfig, ...}
+    // flavor: flavor.#FlavorConfig
 }
