@@ -54,19 +54,19 @@ cue mod publish v1.0.0
 
 cd $WDIR/cue-modules/common
 cue mod tidy
-cue mod publish v0.0.1
+cue mod publish v0.0.5
 
 cd $WDIR/cue-modules/fluxcd
 cue mod tidy
-cue mod publish v0.0.1
+cue mod publish v0.0.5
 
 cd $WDIR/cue-apps/podinfo
 cue mod tidy
-cue mod publish v0.0.1
+cue mod publish v0.0.5
 
 cd $WDIR/cue-modules/clusterv0
 cue mod tidy
-cue mod publish v0.0.1
+cue mod publish v0.0.5
 ```
 
 ## Run example 1
