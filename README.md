@@ -103,6 +103,10 @@ cue mod publish v0.0.1
 cd $WDIR/cue-modules/flavor
 cue mod tidy
 cue mod publish v0.0.1
+
+cd $WDIR/cue-modules/cluster
+cue mod tidy
+cue mod publish v0.0.1
 ```
 
 ## Developing your own app
