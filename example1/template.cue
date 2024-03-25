@@ -1,7 +1,8 @@
-package cluster
+package clusters
 
-#Cluster: #ClusterConfig & {
+#MyCluster: #MyClusterConfig & {
 	name:          *"cluster01" | string
+    role:          *"prod" | "stage" | "dev"
     domainSuffix:  *"example.com" | string
     labels:        {
         "cluster.emil-jacero.com/name": *name | string
@@ -9,7 +10,7 @@ package cluster
     }
     clusterOverrides: {
         clusterName:   *name | string
-        clusterFQDN:   *"\(clusterName).\(domainSuffix)" | string
+        clusterFQDN:   *"\(name).\(role).\(domainSuffix)" | string
         clusterlabels: labels
     }
 }

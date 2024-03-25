@@ -2,7 +2,7 @@
 
 ## Summary
 
-This examples focuses on deploying a simple module to a cluster
+This examples used the built in module function to both get schemas and templates to render correct kubernetes manifest. It also uses the same delivery method (cue modules) to define `apps`, `collections` and `flavors`.
 
 ## Prepp
 
@@ -34,12 +34,6 @@ Set the OCI registry URL.
 export CUE_REGISTRY=localhost:5000/cue-demo
 ```
 
-Set a working directory. This should be the root of the git repo!
-
-```shell
-export WDIR=$(pwd)
-```
-
 Upload supporting modules to the OCI registry. These modules are utilized by apps, bundles, flavors and cluster configurations.
 They are mostly schemas and therefor are very generalized.
 
@@ -54,19 +48,31 @@ cue mod publish v1.0.0
 
 cd $WDIR/cue-modules/common
 cue mod tidy
-cue mod publish v0.0.5
+cue mod publish v0.1.0
 
 cd $WDIR/cue-modules/fluxcd
 cue mod tidy
-cue mod publish v0.0.5
+cue mod publish v0.1.5
 
 cd $WDIR/cue-apps/podinfo
 cue mod tidy
-cue mod publish v0.0.5
+cue mod publish v0.2.2
+
+cd $WDIR/cue-apps/grafana-operator
+cue mod tidy
+cue mod publish v0.0.1
+
+cd $WDIR/cue-apps/prometheus
+cue mod tidy
+cue mod publish v0.0.1
+
+cd $WDIR/cue-apps/alertmanager
+cue mod tidy
+cue mod publish v0.0.1
 
 cd $WDIR/cue-modules/clusterv0
 cue mod tidy
-cue mod publish v0.0.5
+cue mod publish v0.6.0
 ```
 
 ## Run example 1

@@ -8,24 +8,20 @@ import (
     fluxhelm "github.com/emil-jacero/cue-demo/modules/fluxcd/helm@v0"
 )
 
-#DomainValidator: string & =~"^[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9](?:\\.[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])+$"
-#NameValidator: string & =~"^[a-z0-9]([a-z0-9\\-]){0,61}[a-z0-9]$"
-
 #ClusterOverrides: {
-    clusterName:   string
-    clusterRole:   string
-    clusterFQDN:   string
+    clusterName:   string & =~"^[a-z0-9]([a-z0-9\\-]){0,61}[a-z0-9]$"
+    clusterFQDN:   string & =~"^[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9](?:\\.[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])+$"
     clusterlabels: {[string]: string}
     ...
 }
 
 #ClusterConfig: {
-	name:         string
-    role:         string
-    domainSuffix: string
+	name:         string & =~"^[a-z0-9]([a-z0-9\\-]){0,61}[a-z0-9]$"
+    domainSuffix: string & =~"^[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9](?:\\.[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])+$"
     labels:     {[string]: string}
     clusterOverrides: #ClusterOverrides
 	apps?: {app.#AppConfig, ...}
 	bundles?: {bundle.#BundleConfig, ...}
     flavor?: flavor.#FlavorConfig
+    ...
 }

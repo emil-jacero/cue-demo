@@ -6,8 +6,53 @@ import (
 	"encoding/yaml"
 
 	corev1 "k8s.io/api/core/v1"
+	fluxsrcv1beta2 "github.com/fluxcd/source-controller/api/v1beta2"
 	fluxhrv2beta2 "github.com/fluxcd/helm-controller/api/v2beta2"
 )
+
+#HelmRepository: fluxsrcv1beta2.#HelmRepository & {
+	_spec:      #HelmConfig
+	apiVersion: "source.toolkit.fluxcd.io/v1beta2"
+	kind:       "HelmRepository"
+	metadata: {
+		name:        _spec.name
+		namespace:   _spec.namespace
+		labels:      _spec.labels
+		annotations: _spec.annotations
+	}
+	spec: {
+		interval: "\(_spec.interval)m"
+		timeout: "2m"
+		if _spec.repository.url =~ "^http.*" {
+			type: "default"
+			url:  _spec.repository.url
+			if _spec.repository.password != "" {
+				secretRef: name: #HelmSecretName
+			}
+		}
+		if _spec.repository.url =~ "^oci.*"  {
+			type: "oci"
+			url:  _spec.repository.url
+		}
+	}
+}
+
+#HelmSecretName: "\(#HelmConfig.name)-helm"
+#HelmSecret: corev1.#Secret & {
+	_spec:      #HelmConfig
+	apiVersion: "v1"
+	kind:       "Secret"
+	metadata: {
+		name:        #HelmSecretName
+		namespace:   _spec.namespace
+		labels:      _spec.labels
+		annotations: _spec.annotations
+	}
+	stringData: {
+		user:     _spec.repository.user
+		password: _spec.repository.password
+	}
+}
 
 #HelmRelease: fluxhrv2beta2.#HelmRelease & {
 	_spec: #HelmConfig

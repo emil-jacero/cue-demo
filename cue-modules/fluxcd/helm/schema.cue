@@ -4,19 +4,22 @@ import (
 	kubernetes "k8s.io/apimachinery/pkg/runtime"
 )
 
+#OCIProviders: "aws" | "azure" | "gcp" | "generic"
+
 #HelmConfig: {
 	name:      string & =~"^[a-z0-9]([a-z0-9\\-]){0,61}[a-z0-9]$"
 	namespace: string & =~"^[a-z0-9]([a-z0-9\\-]){0,61}[a-z0-9]$"
 	targetNamespace?: string & =~"^[a-z0-9]([a-z0-9\\-]){0,61}[a-z0-9]$"
 	labels: {
-		"helmrelease.toolkit.fluxcd.io/name": *name | string,
+		"helm.toolkit.fluxcd.io/name": *name | string,
 		...
 	}
-	annotations: "helmrelease.toolkit.fluxcd.io/version": *chart.version | string
+	annotations: "helm.toolkit.fluxcd.io/version": *chart.version | string
 	serviceAccountName?: string & =~"^[a-z0-9]([a-z0-9\\-]){0,61}[a-z0-9]$"
 	interval:            *10 | int
 	repository: {
 		url:      string & =~"^[http|oci]"
+		provider?: string & #OCIProviders
 		user:     *"" | string
 		password: *"" | string
 	}
@@ -33,14 +36,14 @@ import (
 	resources: [ID=_]:     kubernetes.#Object
 	valuesFrom: [ string]: string
 
-	// Define values configMap
+	// Combine values with the configMap values file
 	if spec.values != null {
 		let rv = #ReleaseValues & {_spec: spec}
 		resources: "\(spec.name)-values": rv
 		valuesFrom: "\(rv.kind)":         rv.metadata.name
 	}
 
-	// Define secret values secret
+	// Combine secretValues with the secret values file
 	if spec.secretValues != null {
 		let rs = #ReleaseSecretValues & {_spec: spec}
 		resources: "\(spec.name)-secrets": rs
