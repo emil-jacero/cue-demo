@@ -16,7 +16,7 @@ Cluster01Prod: #MyCluster & {
     role:         "prod"
     domainSuffix: "example.com"
     clusterOverrides: {
-        clusterRole: "prod"
+        clusterRole: role
     }
 	apps: {
         "podinfo": podinfo.#Podinfo & {

@@ -4,7 +4,7 @@ language: {
 }
 deps: {
 	"github.com/emil-jacero/cue-demo/modules/fluxcd@v0": {
-		v: "v0.0.1"
+		v: "v0.1.5"
 	}
 	"github.com/fluxcd@v1": {
 		v:       "v1.0.0"
