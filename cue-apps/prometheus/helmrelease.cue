@@ -6,8 +6,8 @@ import (
 
 #Prometheus: fluxhelm.#Helm & {
 	spec: {
-		name:      "prometheus"
-		namespace: "monitoring"
+		name:      *"prometheus"
+		namespace: *"monitoring"
 		repository: {
 			url: "https://prometheus-community.github.io/helm-charts"
 		}

@@ -6,8 +6,8 @@ import (
 
 #GrafanaOperator: fluxhelm.#Helm & {
 	spec: {
-		name:      "grafana-operator"
-		namespace: "grafana"
+		name:      *"grafana-operator"
+		namespace: *"grafana"
 		repository: {
 			url: "oci://ghcr.io/grafana/helm-charts/grafana-operator"
 		}
