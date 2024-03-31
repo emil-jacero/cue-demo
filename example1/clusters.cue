@@ -1,13 +1,26 @@
-// @if(prod)
-
 package clusters
 
 import (
-	"github.com/emil-jacero/cue-demo/apps/podinfo@v0"
+	fluxhelm "github.com/emil-jacero/cue-demo/modules/fluxcd/helm@v0"
 	"github.com/emil-jacero/cue-demo/apps/grafanaoperator@v0"
 	"github.com/emil-jacero/cue-demo/apps/prometheus@v0"
 	"github.com/emil-jacero/cue-demo/apps/alertmanager@v0"
 )
+
+
+// Example app using helm and defined in the same package instead of pulling an app in as a dependency
+#Podinfo: fluxhelm.#Helm & {
+	spec: {
+		name:      *"podinfo" | string
+		namespace: *"dev-apps" | string
+		repository: {
+			url: "https://stefanprodan.github.io/podinfo"
+		}
+		chart: {
+			name: "podinfo"
+		}
+	}
+}
 
 #Clusters: [Cluster01Prod]
 
@@ -19,8 +32,9 @@ Cluster01Prod: #MyCluster & {
         clusterRole: role
     }
 	apps: {
-        "podinfo": podinfo.#Podinfo & {
+        "podinfo": #Podinfo & {
             spec: {
+                namespace: "podinfo"
                 serviceAccountName: "flux-apps"
                 chart: version: "6.0.x"
                 values: {
@@ -38,7 +52,7 @@ Cluster01Prod: #MyCluster & {
                     }
                 }
             }
-        },
+        }
         "grafana-operator": grafanaoperator.#GrafanaOperator & {
             spec: {
                 chart: version: "v5.6.3"

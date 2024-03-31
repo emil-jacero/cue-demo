@@ -6,8 +6,8 @@ import (
 
 #Podinfo: fluxhelm.#Helm & {
 	spec: {
-		name:      *"podinfo"
-		namespace: *"dev-apps"
+		name:      *"podinfo" | string
+		namespace: *"dev-apps" | string
 		repository: {
 			url: "https://stefanprodan.github.io/podinfo"
 		}

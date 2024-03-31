@@ -6,8 +6,8 @@ import (
 
 #Alertmanager: fluxhelm.#Helm & {
 	spec: {
-		name:      *"alertmanager"
-		namespace: *"monitoring"
+		name:      *"alertmanager" | string
+		namespace: *"monitoring" | string
 		repository: {
 			url: "https://prometheus-community.github.io/helm-charts"
 		}
