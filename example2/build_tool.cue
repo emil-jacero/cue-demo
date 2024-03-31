@@ -70,49 +70,54 @@ command: build: {
 	}
 }
 
-// command: lsapps: {
-//     task: {
-//         gather: {
-// 			items: [
-// 				for cl in #Clusters {
-// 					_cl_name: "\(cl.name)-\(cl.role)"
-// 					for k, v in cl.bundles {
-// 						for ak, av in v.apps {
-// 							_app_name: "\(v.spec.name)"
-// 							_app_namespace: "\(v.spec.namespace)"
-// 							_app_chart_version: "\(v.spec.chart.version)"
-// 							_app_repository: "\(v.spec.repository.url)"
-// 						}
-// 						for rk, rv in v.resources {
-// 							"\(cl.name)-\(cl.role)-\(k)-\(rk)": {
-// 								printRes: tabwriter.Write([
-// 									"CLUSTER \tAPP \tNAMESPACE \tVERSION \tURL",
-// 									for a in gather.items {
-// 										"\(a)"
-// 									}
-// 								])
-// 								printRes: cli.Print & {
-// 									text: "\(rk) \t\(rv.metadata.namespace)"
-// 								}
-// 							}
-// 						}
-// 					}
-// 				}
-// 			]
-//         }
-//         print: cli.Print & {
-//             $dep: gather
-//             text: tabwriter.Write([
-//                 "CLUSTER \tAPP \tNAMESPACE \tVERSION \tURL",
-//                 for a in gather.items {
-//                     "\(a)"
-//                 }
-//             ])
-//         }
-//     }
-// }
+command: ls_apps: {
+    task: {
+        gather: {
+			items: [for cl in #Clusters for bk, bv in cl.bundles for ak, av in bv.apps {
+				_clName: "\(cl.name)-\(cl.role)"
+				_bundleName: "\(bv.name)"
+				_appName: "\(av.spec.name)"
+				_appNamespace: "\(av.spec.namespace)"
+				_appChartVersion: "\(av.spec.chart.version)"
+				_appRepository: "\(av.spec.repository.url)"
+				"\(_clName) \t\(_bundleName) \t\(_appName) \t\(_appNamespace) \t\(_appChartVersion) \t\(_appRepository)"
+			}]
+        }
+        print: cli.Print & {
+            $dep: gather
+            text: tabwriter.Write([
+                "CLUSTER \tBUNDLE \tAPP \tNAMESPACE \tVERSION \tREPOSITORY",
+                for a in gather.items {
+                    "\(a)"
+                }
+            ])
+        }
+    }
+}
 
-command: lsresources: {
+command: ls_bundles: {
+    task: {
+        gather: {
+			_appList: []
+			items: [for cl in #Clusters for bk, bv in cl.bundles {
+				_clName: "\(cl.name)-\(cl.role)"
+				_bundleName: "\(bv.name)"
+				"\(_clName) \t\(_bundleName)"
+			}]
+        }
+        print: cli.Print & {
+            $dep: gather
+            text: tabwriter.Write([
+                "CLUSTER \tBUNDLE",
+                for a in gather.items {
+                    "\(a)"
+                }
+            ])
+        }
+    }
+}
+
+command: ls_resources: {
     task: {
         gather: {
 			items: [for cl in #Clusters for bk, bv in cl.bundles for rk, rv in bv.resources {
@@ -129,7 +134,6 @@ command: lsresources: {
 					_resTargetNamespace: rv.targetNamespace
 					"\(_clName) \t\(_bundleName) \t\(_resName) \t\(_resNamespace) \t\(_resTargetNamespace) \t\(_resKind)"
 				}
-				// "\(_clName) \t\(_bundleName) \t\(_resName) \t\(_resNamespace) \t\(_resNamespace) \t\(_resKind)"
 			}]
         }
         print: cli.Print & {
