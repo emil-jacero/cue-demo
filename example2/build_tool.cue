@@ -8,6 +8,7 @@ import (
 	// "tool/file"
 	// "path"
 	// "encoding/yaml"
+	"encoding/json"
 )
 
 #Clusters: [...]
@@ -126,20 +127,21 @@ command: ls_resources: {
 				_resName: rv.metadata.name
 				_resNamespace: rv.metadata.namespace
 				_resKind: rv.kind
+				_resLabels: json.Marshal(rv.metadata.labels)
 
 				if rv.targetNamespace == _|_ {
-					"\(_clName) \t\(_bundleName) \t\(_resName) \t\(_resNamespace) \t\(_resNamespace) \t\(_resKind)"
+					"\(_clName) \t\(_bundleName) \t\(_resName) \t\(_resNamespace) \t\(_resNamespace) \t\(_resKind) \t\(_resLabels)"
 				}
 				if rv.targetNamespace != _|_ {
 					_resTargetNamespace: rv.targetNamespace
-					"\(_clName) \t\(_bundleName) \t\(_resName) \t\(_resNamespace) \t\(_resTargetNamespace) \t\(_resKind)"
+					"\(_clName) \t\(_bundleName) \t\(_resName) \t\(_resNamespace) \t\(_resTargetNamespace) \t\(_resKind) \t\(_resLabels)"
 				}
 			}]
         }
         print: cli.Print & {
             $dep: gather
             text: tabwriter.Write([
-                "CLUSTER \tBUNDLE \tRESOURCE \tNAMESPACE \tTARGETNAMESPACE \tKIND",
+                "CLUSTER \tBUNDLE \tRESOURCE \tNAMESPACE \tTARGETNAMESPACE \tKIND \tLABELS",
                 for a in gather.items {
                     "\(a)"
                 }
