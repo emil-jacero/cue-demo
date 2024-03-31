@@ -45,8 +45,5 @@ Cluster01Prod: #MyCluster & {
         "obs-aio": obs_aio.ObsAio
         "net-cilium": net_cilium.NetCilium
         "stor-o7k": stor_o7k.StorO7k
-        // "obs-aio": ObsAio
-        // "net-cilium": NetCilium
-        // "stor-o7k": StorO7k
     }
 }

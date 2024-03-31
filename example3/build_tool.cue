@@ -71,39 +71,12 @@ command: build: {
 	}
 }
 
-command: ls_apps: {
-    task: {
-        gather: {
-			items: [for cl in #Clusters for bk, bv in cl.bundles for ak, av in bv.apps {
-				_clName: "\(cl.name)-\(cl.role)"
-				_bundleName: "\(bv.name)"
-				_appName: "\(av.spec.name)"
-				_appNamespace: "\(av.spec.namespace)"
-				_appChartVersion: "\(av.spec.chart.version)"
-				_appRepository: "\(av.spec.repository.url)"
-				"\(_clName) \t\(_bundleName) \t\(_appName) \t\(_appNamespace) \t\(_appChartVersion) \t\(_appRepository)"
-			}]
-        }
-        print: cli.Print & {
-            $dep: gather
-            text: tabwriter.Write([
-                "CLUSTER \tBUNDLE \tAPP \tNAMESPACE \tVERSION \tREPOSITORY",
-                for a in gather.items {
-                    "\(a)"
-                }
-            ])
-        }
-    }
-}
-
 command: ls_bundles: {
     task: {
         gather: {
-			_appList: []
 			items: [for cl in #Clusters for bk, bv in cl.bundles {
 				_clName: "\(cl.name)-\(cl.role)"
-				_bundleName: "\(bv.name)"
-				"\(_clName) \t\(_bundleName)"
+				"\(_clName) \t\(bv.name)"
 			}]
         }
         print: cli.Print & {
@@ -118,30 +91,82 @@ command: ls_bundles: {
     }
 }
 
+command: ls_apps: {
+    task: {
+		gatherApps: {
+			items: [for cl in #Clusters for ak, av in cl.apps {
+				_clName: "\(cl.name)-\(cl.role)"
+				_appName: "\(av.spec.name)"
+				_appNamespace: "\(av.spec.namespace)"
+				_appChartVersion: "\(av.spec.chart.version)"
+				_appRepository: "\(av.spec.repository.url)"
+				"\(_clName) \t \t\(_appName) \t\(_appNamespace) \t\(_appChartVersion) \t\(_appRepository)"
+			}]
+		}
+        gatherBundles: {
+			items: [for cl in #Clusters for bk, bv in cl.bundles for ak, av in bv.apps {
+				_clName: "\(cl.name)-\(cl.role)"
+				_bundleName: "\(bv.name)"
+				_appName: "\(av.spec.name)"
+				_appNamespace: "\(av.spec.namespace)"
+				_appChartVersion: "\(av.spec.chart.version)"
+				_appRepository: "\(av.spec.repository.url)"
+				"\(_clName) \t\(_bundleName) \t\(_appName) \t\(_appNamespace) \t\(_appChartVersion) \t\(_appRepository)"
+			}]
+        }
+        print: cli.Print & {
+            $dep1: gatherApps
+            $dep2: gatherBundles
+			items: gatherApps.items + gatherBundles.items
+            text: tabwriter.Write([
+                "CLUSTER \tBUNDLE \tAPP \tNAMESPACE \tVERSION \tREPOSITORY",
+                for a in items {
+                    "\(a)"
+                }
+            ])
+        }
+    }
+}
+
 command: ls_resources: {
     task: {
         gather: {
-			items: [for cl in #Clusters for bk, bv in cl.bundles for rk, rv in bv.resources {
+			items: [for cl in #Clusters for rk, rv in cl.resources {
 				_clName: "\(cl.name)-\(cl.role)"
-				_bundleName: "\(bv.name)"
 				_resName: rv.metadata.name
 				_resNamespace: rv.metadata.namespace
 				_resKind: rv.kind
 				_resLabels: json.Marshal(rv.metadata.labels)
 
 				if rv.targetNamespace == _|_ {
-					"\(_clName) \t\(_bundleName) \t\(_resName) \t\(_resNamespace) \t\(_resNamespace) \t\(_resKind) \t\(_resLabels)"
+					"\(_clName) \t\(_resName) \t\(_resNamespace) \t\(_resNamespace) \t\(_resKind) \t\(_resLabels)"
 				}
 				if rv.targetNamespace != _|_ {
 					_resTargetNamespace: rv.targetNamespace
-					"\(_clName) \t\(_bundleName) \t\(_resName) \t\(_resNamespace) \t\(_resTargetNamespace) \t\(_resKind) \t\(_resLabels)"
+					"\(_clName) \t\(_resName) \t\(_resNamespace) \t\(_resTargetNamespace) \t\(_resKind) \t\(_resLabels)"
 				}
 			}]
+			// items: [for cl in #Clusters for bk, bv in cl.bundles for rk, rv in bv.resources {
+			// 	_clName: "\(cl.name)-\(cl.role)"
+			// 	_bundleName: "\(bv.name)"
+			// 	_resName: rv.metadata.name
+			// 	_resNamespace: rv.metadata.namespace
+			// 	_resKind: rv.kind
+			// 	_resLabels: json.Marshal(rv.metadata.labels)
+
+			// 	if rv.targetNamespace == _|_ {
+			// 		"\(_clName) \t\(_bundleName) \t\(_resName) \t\(_resNamespace) \t\(_resNamespace) \t\(_resKind) \t\(_resLabels)"
+			// 	}
+			// 	if rv.targetNamespace != _|_ {
+			// 		_resTargetNamespace: rv.targetNamespace
+			// 		"\(_clName) \t\(_bundleName) \t\(_resName) \t\(_resNamespace) \t\(_resTargetNamespace) \t\(_resKind) \t\(_resLabels)"
+			// 	}
+			// }]
         }
         print: cli.Print & {
             $dep: gather
             text: tabwriter.Write([
-                "CLUSTER \tBUNDLE \tRESOURCE \tNAMESPACE \tTARGETNAMESPACE \tKIND \tLABELS",
+                "CLUSTER \tRESOURCE \tNAMESPACE \tTARGETNAMESPACE \tKIND \tLABELS",
                 for a in gather.items {
                     "\(a)"
                 }

@@ -7,7 +7,6 @@ package clusters
 #ClusterOverrides: {
     clusterName:   string & =~"^[a-z0-9]([a-z0-9\\-]){0,61}[a-z0-9]$"
     clusterFQDN:   string & =~"^[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9](?:\\.[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])+$"
-    clusterlabels: {[string]: string}
     ...
 }
 
@@ -26,7 +25,9 @@ package clusters
     clusterName:   string & =~"^[a-z0-9]([a-z0-9\\-]){0,61}[a-z0-9]$"
     clusterRole:   string & =~"^[a-z0-9]([a-z0-9\\-]){0,61}[a-z0-9]$"
     clusterFQDN:   string
-    clusterlabels: {[string]: string}
+    apps: {...}
+    bundles: {...}
+    flavor: {...}
     ...
 }
 

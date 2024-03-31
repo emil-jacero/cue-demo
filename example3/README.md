@@ -53,38 +53,54 @@ cue mod publish v0.2.0
 
 cd $WDIR/cue-modules/fluxcd
 cue mod tidy
-cue mod publish v0.2.0
+cue mod publish v0.4.0
 
 cd $WDIR/cue-modules/bundle
 cue mod tidy
-cue mod publish v0.1.0
+cue mod publish v0.7.0
+
+# Cluster
+cd $WDIR/cue-modules/clusterv0
+cue mod tidy
+cue mod publish v0.7.0
 
 # Apps
 cd $WDIR/cue-apps/podinfo
 cue mod tidy
-cue mod publish v0.4.0
+cue mod publish v0.6.0
 
 cd $WDIR/cue-apps/grafana-operator
 cue mod tidy
-cue mod publish v0.4.0
+cue mod publish v0.6.0
 
 cd $WDIR/cue-apps/prometheus
 cue mod tidy
-cue mod publish v0.4.0
+cue mod publish v0.6.0
 
 cd $WDIR/cue-apps/alertmanager
+cue mod tidy
+cue mod publish v0.6.0
+
+cd $WDIR/cue-apps/cilium
+cue mod tidy
+cue mod publish v0.7.0
+
+cd $WDIR/cue-apps/cinder-csi
 cue mod tidy
 cue mod publish v0.4.0
 
 # Bundles
 cd $WDIR/cue-bundles/obs-aio
 cue mod tidy
-cue mod publish v0.1.0
+cue mod publish v0.7.1
 
-# Cluster
-cd $WDIR/cue-modules/clusterv0
+cd $WDIR/cue-bundles/net-cilium
 cue mod tidy
-cue mod publish v0.7.0
+cue mod publish v0.7.1
+
+cd $WDIR/cue-bundles/stor-o7k
+cue mod tidy
+cue mod publish v0.7.1
 ```
 
 ## Run example
@@ -102,8 +118,3 @@ This will go through all apps, bundles and flavors, unpack them into the individ
 ```shell
 cue cmd ls
 ```
-
-## Reflections
-
-The flavor concept may not be required if instead bundles can be nested. When allowing for nested bundles it is up to the end-user how they want to combine them.
-A sort of super bundle can be created that is similar to the flavor concept, in it will be opinionated to a specific cluster deployment.
