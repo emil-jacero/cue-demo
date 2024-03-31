@@ -24,8 +24,8 @@ import (
     let _ns = namespace
     for ak, av in apps {
         for rk, rv in av.resources {
-            if rv.apiVersion =~ "^helm.toolkit.fluxcd.io.*" {resources: "\(ak)-\(rk)": targetNamespace: rv.metadata.namespace}
-            if rv.apiVersion =~ "^helm.toolkit.fluxcd.io.*" {resources: "\(ak)-\(rk)": metadata: namespace: _ns}
+            if rv.apiVersion =~ "^.*toolkit.fluxcd.io.*" {resources: "\(ak)-\(rk)": targetNamespace: rv.metadata.namespace}
+            if rv.apiVersion =~ "^.*toolkit.fluxcd.io.*" {resources: "\(ak)-\(rk)": metadata: namespace: _ns}
             resources: "\(ak)-\(rk)": rv
         }
     }
