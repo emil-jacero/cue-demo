@@ -5,27 +5,30 @@ import (
 	// common "github.com/emil-jacero/cue-demo/modules/common@v0"
 )
 
-// #BundleConfig: {
-// 	name:      string & =~"^[a-z0-9]([a-z0-9\\-]){0,61}[a-z0-9]$"
-// 	namespace: *"bundle-\(name)" | string
-// 	labels: {
-// 		"bundle.emil-jacero.example/name": *name | string,
-// 		...
-// 	}
-// 	apps: {...}
-// }
-
-#Bundle: {
+#BundleConfig: {
 	name:      string & =~"^[a-z0-9]([a-z0-9\\-]){0,61}[a-z0-9]$"
-	namespace: *"bundle-\(name)" | string
+	namespace: string & =~"^[a-z0-9]([a-z0-9\\-]){0,61}[a-z0-9]$"
+	// labels: {
+	// 	"bundle.emil-jacero.example/name": *name | string,
+	// 	...
+	// }
+	apps: {...}
+    ...
+}
+
+#Bundle: #BundleConfig & {
+    name:      *"bundle-1" | string
+	namespace: "bundle-\(name)"
 	apps: {...}
 	resources: [ID=_]:     kubernetes.#Object
+    let _ns = namespace
     for ak, av in apps {
         for rk, rv in av.resources {
+            if rv.apiVersion =~ "^helm.toolkit.fluxcd.io.*" {resources: "\(ak)-\(rk)": targetNamespace: rv.metadata.namespace}
+            if rv.apiVersion =~ "^helm.toolkit.fluxcd.io.*" {resources: "\(ak)-\(rk)": metadata: namespace: _ns}
             resources: "\(ak)-\(rk)": rv
         }
     }
-    ...
 }
 
 #Alertmanager: #Helm & {
