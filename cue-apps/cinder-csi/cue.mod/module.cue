@@ -1,4 +1,4 @@
-module: "github.com/emil-jacero/cue-demo/apps/prometheus@v0"
+module: "github.com/emil-jacero/cue-demo/apps/cinder_csi@v0"
 language: {
 	version: "v0.8.0"
 }

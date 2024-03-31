@@ -1,9 +1,5 @@
 package clusters
 
-import (
-	kubernetes "k8s.io/apimachinery/pkg/runtime"
-)
-
 // #Cluster: #ClusterConfig & {
 // 	name:          *"cluster01" | string
 //     domainSuffix:  *"example.com" | string
@@ -14,6 +10,7 @@ import (
 //     clusterOverrides: {
 //         clusterName:   *name | string
 //         clusterFQDN:   *"\(clusterName).\(domainSuffix)" | string
+//         clusterlabels: labels
 //     }
 // }
 
@@ -22,29 +19,12 @@ import (
     role:          *"prod" | "stage" | "dev"
     domainSuffix:  *"example.com" | string
     labels:        {
-        "cluster.example2/name": name
-        "cluster.example2/role": role
+        "cluster.emil-jacero.com/name": *name | string
+        ...
     }
     clusterOverrides: {
         clusterName:   *name | string
         clusterFQDN:   *"\(name).\(role).\(domainSuffix)" | string
-    }
-    apps: {...}
-    bundles: {...}
-
-	resources: [ID=_]:     kubernetes.#Object
-    let _labels = labels
-
-    for k, v in apps {
-        for rk, rv in v.resources {
-            resources: "\(k)-\(rk)": rv
-            resources: "\(k)-\(rk)": metadata: labels: _labels
-        }
-    }
-    for k, v in bundles {
-        for rk, rv in v.resources {
-            resources: "\(k)-\(rk)": rv
-            resources: "\(k)-\(rk)": metadata: labels: _labels
-        }
+        clusterlabels: labels
     }
 }

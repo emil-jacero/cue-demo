@@ -71,26 +71,6 @@ command: build: {
 	}
 }
 
-command: ls_bundles: {
-    task: {
-        gather: {
-			items: [for cl in #Clusters for bk, bv in cl.bundles {
-				_clName: "\(cl.name)-\(cl.role)"
-				"\(_clName) \t\(bv.name)"
-			}]
-        }
-        print: cli.Print & {
-            $dep: gather
-            text: tabwriter.Write([
-                "CLUSTER \tBUNDLE",
-                for a in gather.items {
-                    "\(a)"
-                }
-            ])
-        }
-    }
-}
-
 command: ls_apps: {
     task: {
         gather: {
@@ -116,45 +96,52 @@ command: ls_apps: {
     }
 }
 
+command: ls_bundles: {
+    task: {
+        gather: {
+			_appList: []
+			items: [for cl in #Clusters for bk, bv in cl.bundles {
+				_clName: "\(cl.name)-\(cl.role)"
+				_bundleName: "\(bv.name)"
+				"\(_clName) \t\(_bundleName)"
+			}]
+        }
+        print: cli.Print & {
+            $dep: gather
+            text: tabwriter.Write([
+                "CLUSTER \tBUNDLE",
+                for a in gather.items {
+                    "\(a)"
+                }
+            ])
+        }
+    }
+}
+
 command: ls_resources: {
     task: {
         gather: {
-			items: [for cl in #Clusters for rk, rv in cl.resources {
+			items: [for cl in #Clusters for bk, bv in cl.bundles for rk, rv in bv.resources {
 				_clName: "\(cl.name)-\(cl.role)"
+				_bundleName: "\(bv.name)"
 				_resName: rv.metadata.name
 				_resNamespace: rv.metadata.namespace
 				_resKind: rv.kind
 				_resLabels: json.Marshal(rv.metadata.labels)
 
 				if rv.targetNamespace == _|_ {
-					"\(_clName) \t\(_resName) \t\(_resNamespace) \t\(_resNamespace) \t\(_resKind) \t\(_resLabels)"
+					"\(_clName) \t\(_bundleName) \t\(_resName) \t\(_resNamespace) \t\(_resNamespace) \t\(_resKind) \t\(_resLabels)"
 				}
 				if rv.targetNamespace != _|_ {
 					_resTargetNamespace: rv.targetNamespace
-					"\(_clName) \t\(_resName) \t\(_resNamespace) \t\(_resTargetNamespace) \t\(_resKind) \t\(_resLabels)"
+					"\(_clName) \t\(_bundleName) \t\(_resName) \t\(_resNamespace) \t\(_resTargetNamespace) \t\(_resKind) \t\(_resLabels)"
 				}
 			}]
-			// items: [for cl in #Clusters for bk, bv in cl.bundles for rk, rv in bv.resources {
-			// 	_clName: "\(cl.name)-\(cl.role)"
-			// 	_bundleName: "\(bv.name)"
-			// 	_resName: rv.metadata.name
-			// 	_resNamespace: rv.metadata.namespace
-			// 	_resKind: rv.kind
-			// 	_resLabels: json.Marshal(rv.metadata.labels)
-
-			// 	if rv.targetNamespace == _|_ {
-			// 		"\(_clName) \t\(_bundleName) \t\(_resName) \t\(_resNamespace) \t\(_resNamespace) \t\(_resKind) \t\(_resLabels)"
-			// 	}
-			// 	if rv.targetNamespace != _|_ {
-			// 		_resTargetNamespace: rv.targetNamespace
-			// 		"\(_clName) \t\(_bundleName) \t\(_resName) \t\(_resNamespace) \t\(_resTargetNamespace) \t\(_resKind) \t\(_resLabels)"
-			// 	}
-			// }]
         }
         print: cli.Print & {
             $dep: gather
             text: tabwriter.Write([
-                "CLUSTER \tRESOURCE \tNAMESPACE \tTARGETNAMESPACE \tKIND \tLABELS",
+                "CLUSTER \tBUNDLE \tRESOURCE \tNAMESPACE \tTARGETNAMESPACE \tKIND \tLABELS",
                 for a in gather.items {
                     "\(a)"
                 }

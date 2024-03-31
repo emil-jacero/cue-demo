@@ -1,7 +1,23 @@
 package bundle
 
-// TODO: Add namespace override for the flux resources only, so that all flux resources are placed under the bundle namespace.
+import (
+	kubernetes "k8s.io/apimachinery/pkg/runtime"
+)
 
-#Bundle: {
-	_config: #BundleConfig
+#Bundle: #BundleConfig & {
+    name:      *"example-1" | string
+	namespace: "bundle-\(name)"
+	labels:    {"bundle.example2/name": name}
+	apps:      {...}
+	resources: [ID=_]:     kubernetes.#Object
+    let _ns = namespace
+    let _labels = labels
+    for ak, av in apps {
+        for rk, rv in av.resources {
+            if rv.apiVersion =~ "^.*toolkit.fluxcd.io.*" {resources: "\(ak)-\(rk)": targetNamespace: rv.metadata.namespace}
+            if rv.apiVersion =~ "^.*toolkit.fluxcd.io.*" {resources: "\(ak)-\(rk)": metadata: namespace: _ns}
+            resources: "\(ak)-\(rk)": metadata: labels: _labels
+            resources: "\(ak)-\(rk)": rv
+        }
+    }
 }

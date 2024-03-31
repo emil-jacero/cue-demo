@@ -1,4 +1,4 @@
-# Example 1
+# Example 2
 
 ## Summary
 
@@ -38,6 +38,7 @@ Upload supporting modules to the OCI registry. These modules are utilized by app
 They are mostly schemas and therefor are very generalized.
 
 ```shell
+# Modules
 cd $WDIR/cue-modules/k8s
 cue mod tidy
 cue mod publish v1.0.0
@@ -48,39 +49,66 @@ cue mod publish v1.0.0
 
 cd $WDIR/cue-modules/common
 cue mod tidy
-cue mod publish v0.1.0
+cue mod publish v0.2.0
 
 cd $WDIR/cue-modules/fluxcd
 cue mod tidy
-cue mod publish v0.1.5
+cue mod publish v0.3.0
 
-cd $WDIR/cue-apps/podinfo
+cd $WDIR/cue-modules/bundle
 cue mod tidy
 cue mod publish v0.4.0
+
+# Apps
+cd $WDIR/cue-apps/podinfo
+cue mod tidy
+cue mod publish v0.5.0
 
 cd $WDIR/cue-apps/grafana-operator
 cue mod tidy
-cue mod publish v0.4.0
+cue mod publish v0.5.0
 
 cd $WDIR/cue-apps/prometheus
 cue mod tidy
-cue mod publish v0.4.0
+cue mod publish v0.5.0
 
 cd $WDIR/cue-apps/alertmanager
 cue mod tidy
+cue mod publish v0.5.0
+
+cd $WDIR/cue-apps/cilium
+cue mod tidy
+cue mod publish v0.2.0
+
+cd $WDIR/cue-apps/cinder-csi
+cue mod tidy
 cue mod publish v0.4.0
 
+# Bundles
+cd $WDIR/cue-bundles/obs-aio
+cue mod tidy
+cue mod publish v0.4.1
+
+cd $WDIR/cue-bundles/net-cilium
+cue mod tidy
+cue mod publish v0.4.1
+
+cd $WDIR/cue-bundles/stor-o7k
+cue mod tidy
+cue mod publish v0.4.1
+
+# Cluster
 cd $WDIR/cue-modules/clusterv0
 cue mod tidy
 cue mod publish v0.7.0
 ```
 
-## Run example 1
+## Run example
 
 Prepp
 
 ```shell
-cd $WDIR/example1
+cd $WDIR/example2
 cue mod tidy
 ```
 

@@ -1,9 +1,6 @@
 package flavor
 
 import (
-	common "github.com/emil-jacero/cue-demo/modules/common@v0"
-	app "github.com/emil-jacero/cue-demo/modules/app@v0"
-	bundle "github.com/emil-jacero/cue-demo/modules/bundle@v0"
 )
 
 #FlavorConfig: common.#ModuleConfig & {

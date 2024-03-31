@@ -1,9 +1,8 @@
-# Example 1
+# Example 3
 
 ## Summary
 
-This example showcases the `apps` feature. The cluster operator can define a set of apps with the value overrides.
-The apps will be unpacked and exported as yaml kubernetes manifests.
+This examples used the built in module function to both get schemas and templates to render correct kubernetes manifest. It also uses the same delivery method (cue modules) to define `apps`, `collections` and `flavors`.
 
 ## Prepp
 
@@ -56,6 +55,10 @@ cd $WDIR/cue-modules/fluxcd
 cue mod tidy
 cue mod publish v0.2.0
 
+cd $WDIR/cue-modules/bundle
+cue mod tidy
+cue mod publish v0.1.0
+
 # Apps
 cd $WDIR/cue-apps/podinfo
 cue mod tidy
@@ -73,6 +76,11 @@ cd $WDIR/cue-apps/alertmanager
 cue mod tidy
 cue mod publish v0.4.0
 
+# Bundles
+cd $WDIR/cue-bundles/obs-aio
+cue mod tidy
+cue mod publish v0.1.0
+
 # Cluster
 cd $WDIR/cue-modules/clusterv0
 cue mod tidy
@@ -84,7 +92,7 @@ cue mod publish v0.7.0
 Prepp
 
 ```shell
-cd $WDIR/example1
+cd $WDIR/example3
 cue mod tidy
 ```
 
@@ -94,3 +102,8 @@ This will go through all apps, bundles and flavors, unpack them into the individ
 ```shell
 cue cmd ls
 ```
+
+## Reflections
+
+The flavor concept may not be required if instead bundles can be nested. When allowing for nested bundles it is up to the end-user how they want to combine them.
+A sort of super bundle can be created that is similar to the flavor concept, in it will be opinionated to a specific cluster deployment.

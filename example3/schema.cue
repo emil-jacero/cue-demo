@@ -1,12 +1,8 @@
-package cluster
+package clusters
 
-import (
-	common "github.com/emil-jacero/cue-demo/modules/common@v0"
-	app "github.com/emil-jacero/cue-demo/modules/app@v0"
-	bundle "github.com/emil-jacero/cue-demo/modules/bundle@v0"
-	flavor "github.com/emil-jacero/cue-demo/modules/flavor@v0"
-    fluxhelm "github.com/emil-jacero/cue-demo/modules/fluxcd/helm@v0"
-)
+// import (
+// 	cluster "github.com/emil-jacero/cue-demo/modules/cluster@v0"
+// )
 
 #ClusterOverrides: {
     clusterName:   string & =~"^[a-z0-9]([a-z0-9\\-]){0,61}[a-z0-9]$"
@@ -20,8 +16,22 @@ import (
     domainSuffix: string & =~"^[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9](?:\\.[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])+$"
     labels:     {[string]: string}
     clusterOverrides: #ClusterOverrides
-	apps?: {app.#AppConfig, ...}
-	bundles?: {bundle.#BundleConfig, ...}
-    flavor?: flavor.#FlavorConfig
+    apps: {...}
+    bundles: {...}
+    flavor: {...}
+    ...
+}
+
+#MyClusterOverrides: {
+    clusterName:   string & =~"^[a-z0-9]([a-z0-9\\-]){0,61}[a-z0-9]$"
+    clusterRole:   string & =~"^[a-z0-9]([a-z0-9\\-]){0,61}[a-z0-9]$"
+    clusterFQDN:   string
+    clusterlabels: {[string]: string}
+    ...
+}
+
+#MyClusterConfig: #ClusterConfig & {
+    role:         string
+    clusterOverrides: #MyClusterOverrides
     ...
 }

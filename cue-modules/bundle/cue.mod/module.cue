@@ -3,10 +3,8 @@ language: {
 	version: "v0.8.0"
 }
 deps: {
-	"github.com/emil-jacero/cue-demo/modules/app@v0": {
-		v: "v0.0.1"
-	}
-	"github.com/emil-jacero/cue-demo/modules/common@v0": {
-		v: "v0.0.1"
+	"k8s.io@v1": {
+		v:       "v1.0.0"
+		default: true
 	}
 }
