@@ -1,0 +1,414 @@
+metadata:
+  name: podinfo
+  namespace: podinfo
+  labels:
+    helm.toolkit.fluxcd.io/name: podinfo
+  annotations:
+    helm.toolkit.fluxcd.io/version: 6.0.x
+spec:
+  url: https://stefanprodan.github.io/podinfo
+  interval: 10m
+  timeout: 2m
+  type: default
+kind: HelmRepository
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+---
+metadata:
+  name: podinfo
+  namespace: podinfo
+  labels:
+    helm.toolkit.fluxcd.io/name: podinfo
+  annotations:
+    helm.toolkit.fluxcd.io/version: 6.0.x
+spec:
+  chart:
+    spec:
+      chart: podinfo
+      version: 6.0.x
+      sourceRef:
+        kind: HelmRepository
+        name: podinfo
+      interval: 10m
+  interval: 20m
+  serviceAccountName: flux-apps
+  install:
+    crds: Create
+  upgrade:
+    crds: CreateReplace
+  valuesFrom:
+    - kind: ConfigMap
+      name: podinfo-9476eac8
+kind: HelmRelease
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+---
+metadata:
+  name: podinfo-9476eac8
+  namespace: podinfo
+  labels:
+    helm.toolkit.fluxcd.io/name: podinfo
+  annotations:
+    helm.toolkit.fluxcd.io/version: 6.0.x
+immutable: true
+data:
+  values.yaml: |
+    hpa:
+      enabled: true
+      maxReplicas: 10
+      cpu: 99
+    resources:
+      limits:
+        memory: 512Mi
+      requests:
+        cpu: 100m
+        memory: 32Mi
+kind: ConfigMap
+apiVersion: v1
+---
+metadata:
+  name: grafana-operator
+  namespace: bundle-obs-aio
+  labels:
+    bundle.example2/name: obs-aio
+    helm.toolkit.fluxcd.io/name: grafana-operator
+  annotations:
+    helm.toolkit.fluxcd.io/version: v5.6.3
+spec:
+  url: oci://ghcr.io/grafana/helm-charts/grafana-operator
+  interval: 10m
+  timeout: 2m
+  type: oci
+kind: HelmRepository
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+---
+metadata:
+  name: grafana-operator
+  namespace: bundle-obs-aio
+  labels:
+    bundle.example2/name: obs-aio
+    helm.toolkit.fluxcd.io/name: grafana-operator
+  annotations:
+    helm.toolkit.fluxcd.io/version: v5.6.3
+spec:
+  chart:
+    spec:
+      chart: grafana-operator
+      version: v5.6.3
+      sourceRef:
+        kind: HelmRepository
+        name: grafana-operator
+      interval: 10m
+  interval: 20m
+  targetNamespace: grafana
+  install:
+    crds: Create
+  upgrade:
+    crds: CreateReplace
+  valuesFrom:
+    - kind: ConfigMap
+      name: grafana-operator-cc0fca5c
+kind: HelmRelease
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+---
+metadata:
+  name: grafana-operator-cc0fca5c
+  namespace: grafana
+  labels:
+    bundle.example2/name: obs-aio
+    helm.toolkit.fluxcd.io/name: grafana-operator
+  annotations:
+    helm.toolkit.fluxcd.io/version: v5.6.3
+immutable: true
+data:
+  values.yaml: |
+    image:
+      repository: ghcr.io/grafana/grafana-operator
+      pullPolicy: Always
+      tag: ""
+kind: ConfigMap
+apiVersion: v1
+---
+metadata:
+  name: prometheus
+  namespace: bundle-obs-aio
+  labels:
+    bundle.example2/name: obs-aio
+    helm.toolkit.fluxcd.io/name: prometheus
+  annotations:
+    helm.toolkit.fluxcd.io/version: 25.18.0
+spec:
+  url: https://prometheus-community.github.io/helm-charts
+  interval: 10m
+  timeout: 2m
+  type: default
+kind: HelmRepository
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+---
+metadata:
+  name: prometheus
+  namespace: bundle-obs-aio
+  labels:
+    bundle.example2/name: obs-aio
+    helm.toolkit.fluxcd.io/name: prometheus
+  annotations:
+    helm.toolkit.fluxcd.io/version: 25.18.0
+spec:
+  chart:
+    spec:
+      chart: prometheus
+      version: 25.18.0
+      sourceRef:
+        kind: HelmRepository
+        name: prometheus
+      interval: 10m
+  interval: 20m
+  targetNamespace: monitoring
+  install:
+    crds: Create
+  upgrade:
+    crds: CreateReplace
+  valuesFrom:
+    - kind: ConfigMap
+      name: prometheus-a32f976e
+kind: HelmRelease
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+---
+metadata:
+  name: prometheus-a32f976e
+  namespace: monitoring
+  labels:
+    bundle.example2/name: obs-aio
+    helm.toolkit.fluxcd.io/name: prometheus
+  annotations:
+    helm.toolkit.fluxcd.io/version: 25.18.0
+immutable: true
+data:
+  values.yaml: |
+    configmapReload:
+      prometheus:
+        enabled: true
+        name: configmap-reload
+        image:
+          repository: quay.io/prometheus-operator/prometheus-config-reloader
+          tag: v0.72.0
+          digest: ""
+          pullPolicy: Always
+kind: ConfigMap
+apiVersion: v1
+---
+metadata:
+  name: alertmanager
+  namespace: bundle-obs-aio
+  labels:
+    bundle.example2/name: obs-aio
+    helm.toolkit.fluxcd.io/name: alertmanager
+  annotations:
+    helm.toolkit.fluxcd.io/version: 1.10.0
+spec:
+  url: https://prometheus-community.github.io/helm-charts
+  interval: 10m
+  timeout: 2m
+  type: default
+kind: HelmRepository
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+---
+metadata:
+  name: alertmanager
+  namespace: bundle-obs-aio
+  labels:
+    bundle.example2/name: obs-aio
+    helm.toolkit.fluxcd.io/name: alertmanager
+  annotations:
+    helm.toolkit.fluxcd.io/version: 1.10.0
+spec:
+  chart:
+    spec:
+      chart: alertmanager
+      version: 1.10.0
+      sourceRef:
+        kind: HelmRepository
+        name: alertmanager
+      interval: 10m
+  interval: 20m
+  targetNamespace: monitoring
+  install:
+    crds: Create
+  upgrade:
+    crds: CreateReplace
+  valuesFrom:
+    - kind: ConfigMap
+      name: alertmanager-2ddd8b18
+kind: HelmRelease
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+---
+metadata:
+  name: alertmanager-2ddd8b18
+  namespace: monitoring
+  labels:
+    bundle.example2/name: obs-aio
+    helm.toolkit.fluxcd.io/name: alertmanager
+  annotations:
+    helm.toolkit.fluxcd.io/version: 1.10.0
+immutable: true
+data:
+  values.yaml: |
+    image:
+      repository: quay.io/prometheus/alertmanager
+      pullPolicy: Always
+      tag: ""
+kind: ConfigMap
+apiVersion: v1
+---
+metadata:
+  name: cilium
+  namespace: bundle-net-cilium
+  labels:
+    bundle.example2/name: net-cilium
+    helm.toolkit.fluxcd.io/name: cilium
+  annotations:
+    helm.toolkit.fluxcd.io/version: 1.16.0-pre.0
+spec:
+  url: https://helm.cilium.io/
+  interval: 10m
+  timeout: 2m
+  type: default
+kind: HelmRepository
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+---
+metadata:
+  name: cilium
+  namespace: bundle-net-cilium
+  labels:
+    bundle.example2/name: net-cilium
+    helm.toolkit.fluxcd.io/name: cilium
+  annotations:
+    helm.toolkit.fluxcd.io/version: 1.16.0-pre.0
+spec:
+  chart:
+    spec:
+      chart: cilium
+      version: 1.16.0-pre.0
+      sourceRef:
+        kind: HelmRepository
+        name: cilium
+      interval: 10m
+  interval: 20m
+  targetNamespace: cilium
+  install:
+    crds: Create
+  upgrade:
+    crds: CreateReplace
+  valuesFrom:
+    - kind: ConfigMap
+      name: cilium-f29c3d69
+kind: HelmRelease
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+---
+metadata:
+  name: cilium-f29c3d69
+  namespace: cilium
+  labels:
+    bundle.example2/name: net-cilium
+    helm.toolkit.fluxcd.io/name: cilium
+  annotations:
+    helm.toolkit.fluxcd.io/version: 1.16.0-pre.0
+immutable: true
+data:
+  values.yaml: |
+    MTU: 0
+    authentication:
+      enabled: true
+    hubble:
+      enabled: true
+      ui:
+        ingress:
+          enabled: true
+          annotations: {}
+          labels: {}
+          className: nginx
+          hosts:
+            - chart-example.local
+          tls: []
+kind: ConfigMap
+apiVersion: v1
+---
+metadata:
+  name: cinder-csi
+  namespace: bundle-stor-o7k
+  labels:
+    bundle.example2/name: stor-o7k
+    helm.toolkit.fluxcd.io/name: cinder-csi
+  annotations:
+    helm.toolkit.fluxcd.io/version: 2.29.0
+spec:
+  url: https://kubernetes.github.io/cloud-provider-openstack
+  interval: 10m
+  timeout: 2m
+  type: default
+kind: HelmRepository
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+---
+metadata:
+  name: cinder-csi
+  namespace: bundle-stor-o7k
+  labels:
+    bundle.example2/name: stor-o7k
+    helm.toolkit.fluxcd.io/name: cinder-csi
+  annotations:
+    helm.toolkit.fluxcd.io/version: 2.29.0
+spec:
+  chart:
+    spec:
+      chart: openstack-cinder-csi
+      version: 2.29.0
+      sourceRef:
+        kind: HelmRepository
+        name: cinder-csi
+      interval: 10m
+  interval: 20m
+  targetNamespace: cinder-csi
+  install:
+    crds: Create
+  upgrade:
+    crds: CreateReplace
+  valuesFrom:
+    - kind: ConfigMap
+      name: cinder-csi-5ba21681
+kind: HelmRelease
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+---
+metadata:
+  name: cinder-csi-5ba21681
+  namespace: cinder-csi
+  labels:
+    bundle.example2/name: stor-o7k
+    helm.toolkit.fluxcd.io/name: cinder-csi
+  annotations:
+    helm.toolkit.fluxcd.io/version: 2.29.0
+immutable: true
+data:
+  values.yaml: |
+    secret:
+      enabled: true
+      hostMount: true
+      create: true
+      filename: cloud.conf
+      name: cinder-csi-cloud-config
+      data:
+        cloud.conf: |-
+          [Global]
+          auth-url=http://openstack-control-plane
+          user-id=user-id
+          password=password
+          trust-id=trust-id
+          region=RegionOne
+          ca-file=/etc/cacert/ca-bundle.crt
+    storageClass:
+      enabled: true
+      delete:
+        isDefault: false
+        allowVolumeExpansion: true
+      retain:
+        isDefault: true
+        allowVolumeExpansion: true
+kind: ConfigMap
+apiVersion: v1
