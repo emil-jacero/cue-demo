@@ -2,7 +2,8 @@
 
 ## Summary
 
-This examples used the built in module function to both get schemas and templates to render correct kubernetes manifest. It also uses the same delivery method (cue modules) to define `apps`, `collections` and `flavors`.
+This example showcases the `apps` feature. The cluster operator can define a set of apps with the value overrides.
+The apps will be unpacked and exported as yaml kubernetes manifests.
 
 ## Prepp
 
