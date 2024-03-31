@@ -93,7 +93,17 @@ command: ls_bundles: {
 
 command: ls_apps: {
     task: {
-        gather: {
+		gatherApps: {
+			items: [for cl in #Clusters for ak, av in cl.apps {
+				_clName: "\(cl.name)-\(cl.role)"
+				_appName: "\(av.spec.name)"
+				_appNamespace: "\(av.spec.namespace)"
+				_appChartVersion: "\(av.spec.chart.version)"
+				_appRepository: "\(av.spec.repository.url)"
+				"\(_clName) \t \t\(_appName) \t\(_appNamespace) \t\(_appChartVersion) \t\(_appRepository)"
+			}]
+		}
+        gatherBundles: {
 			items: [for cl in #Clusters for bk, bv in cl.bundles for ak, av in bv.apps {
 				_clName: "\(cl.name)-\(cl.role)"
 				_bundleName: "\(bv.name)"
@@ -105,10 +115,12 @@ command: ls_apps: {
 			}]
         }
         print: cli.Print & {
-            $dep: gather
+            $dep1: gatherApps
+            $dep2: gatherBundles
+			items: gatherApps.items + gatherBundles.items
             text: tabwriter.Write([
                 "CLUSTER \tBUNDLE \tAPP \tNAMESPACE \tVERSION \tREPOSITORY",
-                for a in gather.items {
+                for a in items {
                     "\(a)"
                 }
             ])

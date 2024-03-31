@@ -4,13 +4,13 @@ language: {
 }
 deps: {
 	"github.com/emil-jacero/cue-demo/apps/cilium@v0": {
-		v: "v0.3.0"
+		v: "v0.7.0"
 	}
 	"github.com/emil-jacero/cue-demo/modules/bundle@v0": {
-		v: "v0.5.0"
+		v: "v0.7.0"
 	}
 	"github.com/emil-jacero/cue-demo/modules/fluxcd@v0": {
-		v: "v0.2.0"
+		v: "v0.4.0"
 	}
 	"github.com/fluxcd@v1": {
 		v:       "v1.0.0"

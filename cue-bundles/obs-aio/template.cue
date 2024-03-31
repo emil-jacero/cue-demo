@@ -8,7 +8,7 @@ import (
 	"github.com/emil-jacero/cue-demo/apps/prometheus@v0"
 )
 
-obsAio: bundle.#Bundle & {
+ObsAio: bundle.#Bundle & {
     name: "obs-aio"
     apps: {
         "grafana-operator": grafanaoperator.#GrafanaOperator & {

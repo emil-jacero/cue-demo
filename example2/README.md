@@ -53,32 +53,37 @@ cue mod publish v0.2.0
 
 cd $WDIR/cue-modules/fluxcd
 cue mod tidy
-cue mod publish v0.3.0
+cue mod publish v0.4.0
 
 cd $WDIR/cue-modules/bundle
 cue mod tidy
-cue mod publish v0.4.0
+cue mod publish v0.7.0
+
+# Cluster
+cd $WDIR/cue-modules/clusterv0
+cue mod tidy
+cue mod publish v0.7.0
 
 # Apps
 cd $WDIR/cue-apps/podinfo
 cue mod tidy
-cue mod publish v0.5.0
+cue mod publish v0.6.0
 
 cd $WDIR/cue-apps/grafana-operator
 cue mod tidy
-cue mod publish v0.5.0
+cue mod publish v0.6.0
 
 cd $WDIR/cue-apps/prometheus
 cue mod tidy
-cue mod publish v0.5.0
+cue mod publish v0.6.0
 
 cd $WDIR/cue-apps/alertmanager
 cue mod tidy
-cue mod publish v0.5.0
+cue mod publish v0.6.0
 
 cd $WDIR/cue-apps/cilium
 cue mod tidy
-cue mod publish v0.2.0
+cue mod publish v0.7.0
 
 cd $WDIR/cue-apps/cinder-csi
 cue mod tidy
@@ -87,20 +92,15 @@ cue mod publish v0.4.0
 # Bundles
 cd $WDIR/cue-bundles/obs-aio
 cue mod tidy
-cue mod publish v0.4.1
+cue mod publish v0.7.1
 
 cd $WDIR/cue-bundles/net-cilium
 cue mod tidy
-cue mod publish v0.4.1
+cue mod publish v0.7.1
 
 cd $WDIR/cue-bundles/stor-o7k
 cue mod tidy
-cue mod publish v0.4.1
-
-# Cluster
-cd $WDIR/cue-modules/clusterv0
-cue mod tidy
-cue mod publish v0.7.0
+cue mod publish v0.7.1
 ```
 
 ## Run example

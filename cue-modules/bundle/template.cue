@@ -14,7 +14,7 @@ import (
     let _labels = labels
     for ak, av in apps {
         for rk, rv in av.resources {
-            if rv.apiVersion =~ "^.*toolkit.fluxcd.io.*" {resources: "\(ak)-\(rk)": targetNamespace: rv.metadata.namespace}
+            if rv.kind =~ "HelmRelease" {resources: "\(ak)-\(rk)": spec: targetNamespace: rv.metadata.namespace}
             if rv.apiVersion =~ "^.*toolkit.fluxcd.io.*" {resources: "\(ak)-\(rk)": metadata: namespace: _ns}
             resources: "\(ak)-\(rk)": metadata: labels: _labels
             resources: "\(ak)-\(rk)": rv

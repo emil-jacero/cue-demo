@@ -21,6 +21,18 @@ deps: {
 	"github.com/emil-jacero/cue-demo/apps/prometheus@v0": {
 		v: "v0.6.0"
 	}
+	"github.com/emil-jacero/cue-demo/bundles/net_cilium@v0": {
+		v: "v0.7.1"
+	}
+	"github.com/emil-jacero/cue-demo/bundles/obs_aio@v0": {
+		v: "v0.7.1"
+	}
+	"github.com/emil-jacero/cue-demo/bundles/stor_o7k@v0": {
+		v: "v0.7.1"
+	}
+	"github.com/emil-jacero/cue-demo/modules/bundle@v0": {
+		v: "v0.7.0"
+	}
 	"github.com/emil-jacero/cue-demo/modules/fluxcd@v0": {
 		v: "v0.4.0"
 	}
