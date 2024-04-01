@@ -1,24 +1,8 @@
 # Example 2
 
-## Summary
-
-This examples used the built in module function to both get schemas and templates to render correct kubernetes manifest. It also uses the same delivery method (cue modules) to define `apps`, `collections` and `flavors`.
-
 ## Preparations
 
 ### Cue
-
-Enable the experimental cue modules support.
-
-```shell
-export CUE_EXPERIMENT=modules
-```
-
-Set the OCI registry URL.
-
-```shell
-export CUE_REGISTRY=localhost:5000/cue-demo
-```
 
 Upload supporting modules to the OCI registry. These modules are utilized by apps, bundles, flavors and cluster configurations.
 They are mostly schemas and therefor are very generalized.
@@ -49,19 +33,19 @@ cue mod publish v0.7.0
 # Apps
 cd $WDIR/cue-apps/podinfo
 cue mod tidy
-cue mod publish v0.6.0
+cue mod publish v0.7.0
 
 cd $WDIR/cue-apps/grafana-operator
 cue mod tidy
-cue mod publish v0.6.0
+cue mod publish v0.7.0
 
 cd $WDIR/cue-apps/prometheus
 cue mod tidy
-cue mod publish v0.6.0
+cue mod publish v0.7.0
 
 cd $WDIR/cue-apps/alertmanager
 cue mod tidy
-cue mod publish v0.6.0
+cue mod publish v0.7.0
 
 cd $WDIR/cue-apps/cilium
 cue mod tidy
@@ -69,7 +53,7 @@ cue mod publish v0.7.0
 
 cd $WDIR/cue-apps/cinder-csi
 cue mod tidy
-cue mod publish v0.4.0
+cue mod publish v0.7.0
 
 # Bundles
 cd $WDIR/cue-bundles/obs-aio

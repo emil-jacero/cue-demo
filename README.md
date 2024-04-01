@@ -53,7 +53,7 @@ The resulting output can be pushed to a git repo, or even better, to be packaged
 - go == 1.21.0
 - CUE == 0.8.0
 
-## Examples
+## Cue
 
 First set the working dir. This should be the root of the git repo!
 

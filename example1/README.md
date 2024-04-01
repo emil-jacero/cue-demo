@@ -4,18 +4,6 @@
 
 ### Cue
 
-Enable the experimental cue modules support.
-
-```shell
-export CUE_EXPERIMENT=modules
-```
-
-Set the OCI registry URL.
-
-```shell
-export CUE_REGISTRY=localhost:5000/cue-demo
-```
-
 Upload supporting modules to the OCI registry. These modules are utilized by apps, bundles, flavors and cluster configurations.
 They are mostly schemas and therefor are very generalized.
 
