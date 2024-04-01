@@ -1,10 +1,6 @@
 # Example 3
 
-## Summary
-
-This examples used the built in module function to both get schemas and templates to render correct kubernetes manifest. It also uses the same delivery method (cue modules) to define `apps`, `collections` and `flavors`.
-
-## Prepp
+## Preparations
 
 ### Registry
 
@@ -47,17 +43,13 @@ cd $WDIR/cue-modules/fluxv2
 cue mod tidy
 cue mod publish v1.0.0
 
-cd $WDIR/cue-modules/common
-cue mod tidy
-cue mod publish v0.2.0
-
 cd $WDIR/cue-modules/fluxcd
 cue mod tidy
 cue mod publish v0.4.0
 
 cd $WDIR/cue-modules/bundle
 cue mod tidy
-cue mod publish v0.7.0
+cue mod publish v0.8.0
 
 # Cluster
 cd $WDIR/cue-modules/clusterv0
@@ -92,15 +84,17 @@ cue mod publish v0.4.0
 # Bundles
 cd $WDIR/cue-bundles/obs-aio
 cue mod tidy
-cue mod publish v0.7.1
+cue mod publish v0.9.0
 
 cd $WDIR/cue-bundles/net-cilium
 cue mod tidy
-cue mod publish v0.7.1
+cue mod publish v0.9.0
 
 cd $WDIR/cue-bundles/stor-o7k
 cue mod tidy
-cue mod publish v0.7.1
+cue mod publish v0.9.0
+
+# Flavors
 ```
 
 ## Run example
@@ -112,9 +106,32 @@ cd $WDIR/example3
 cue mod tidy
 ```
 
-List all resources.
-This will go through all apps, bundles and flavors, unpack them into the individual apps and then list them.
+List all apps
 
 ```shell
-cue cmd ls
+cue cmd ls_apps
+```
+
+List all bundles
+
+```shell
+cue cmd ls_bundles
+```
+
+List all Kubernetes resources
+
+```shell
+cue cmd ls_resources
+```
+
+View the manifest output
+
+```shell
+cue cmd view
+```
+
+Build the resources and output to yaml
+
+```shell
+cue cmd build
 ```

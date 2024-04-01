@@ -1,26 +1,15 @@
+// @if(prod)
+
 package clusters
 
 import (
-	fluxhelm "github.com/emil-jacero/cue-demo/modules/fluxcd/helm@v0"
-	"github.com/emil-jacero/cue-demo/apps/grafanaoperator@v0"
-	"github.com/emil-jacero/cue-demo/apps/prometheus@v0"
-	"github.com/emil-jacero/cue-demo/apps/alertmanager@v0"
+    "github.com/emil-jacero/cue-demo/apps/podinfo@v0"
+    "github.com/emil-jacero/cue-demo/apps/alertmanager@v0"
+    "github.com/emil-jacero/cue-demo/apps/cilium@v0"
+    "github.com/emil-jacero/cue-demo/apps/cinder_csi@v0"
+    "github.com/emil-jacero/cue-demo/apps/grafanaoperator@v0"
+    "github.com/emil-jacero/cue-demo/apps/prometheus@v0"
 )
-
-
-// Example app using helm and defined in the same package instead of pulling an app in as a dependency
-#Podinfo: fluxhelm.#Helm & {
-	spec: {
-		name:      *"podinfo" | string
-		namespace: *"dev-apps" | string
-		repository: {
-			url: "https://stefanprodan.github.io/podinfo"
-		}
-		chart: {
-			name: "podinfo"
-		}
-	}
-}
 
 #Clusters: [Cluster01Prod]
 
@@ -31,8 +20,8 @@ Cluster01Prod: #MyCluster & {
     clusterOverrides: {
         clusterRole: role
     }
-	apps: {
-        "podinfo": #Podinfo & {
+    apps: {
+        "podinfo": podinfo.#Podinfo & {
             spec: {
                 namespace: "podinfo"
                 serviceAccountName: "flux-apps"
@@ -50,6 +39,24 @@ Cluster01Prod: #MyCluster & {
                             memory: "32Mi"
                         }
                     }
+                }
+            }
+        }
+        "cilium": cilium.#Cilium & {
+            spec: {
+                chart: version: "1.16.0-pre.0"
+                values: {
+                    MTU: 0
+                    authentication: enabled: true
+                    hubble: enabled: true
+                    hubble: ui: ingress: {
+                        enabled: true
+                        annotations: {}
+                        labels: {}
+                        className: "nginx"
+                        hosts: ["chart-example.local"]
+                        tls: []
+                        }
                 }
             }
         }
@@ -92,6 +99,40 @@ Cluster01Prod: #MyCluster & {
                         repository: "quay.io/prometheus/alertmanager"
                         pullPolicy: "Always"
                         tag: ""
+                    }
+                }
+            }
+        }
+        "cinder-csi": cinder_csi.#CinderCsi & {
+            spec: {
+                chart: version: "2.29.0"
+                values: {
+                    secret: {
+                        enabled:   true
+                        hostMount: true
+                        create:    true
+                        filename:  "cloud.conf"
+                        name:      "cinder-csi-cloud-config"
+                        data: "cloud.conf": """
+                            [Global]
+                            auth-url=http://openstack-control-plane
+                            user-id=user-id
+                            password=password
+                            trust-id=trust-id
+                            region=RegionOne
+                            ca-file=/etc/cacert/ca-bundle.crt
+                            """
+                    }
+                    storageClass: {
+                        enabled: true
+                        delete: {
+                            isDefault:            false
+                            allowVolumeExpansion: true
+                        }
+                        retain: {
+                            isDefault:            true
+                            allowVolumeExpansion: true
+                        }
                     }
                 }
             }

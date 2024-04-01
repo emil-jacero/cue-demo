@@ -73,17 +73,46 @@ Set the OCI registry URL.
 export CUE_REGISTRY=localhost:5000/cue-demo
 ```
 
+### Registry
+
+Pull and run a docker registry.
+
+```shell
+docker run -d -p 5000:5000 --restart always --name registry registry:2
+```
+
+Destroy registry to cleanup.
+
+```shell
+docker rm -f reg
+```
+
 ### Example1
 
-Then go to the [README](example1/README.md)
+This example aims to showcase the way `apps` are defined and how clusters are defined.
+
+The cluster operator can define a set of apps with the value overrides.
+The apps will be unpacked and exported as yaml kubernetes manifests.
+
+Go to the [README](example1/README.md)
 
 ### Example2
 
-Then go to the [README](example2/README.md)
+This examples used the built in module function to both get schemas and templates to render correct kubernetes manifest. It also uses the same delivery method (cue modules) to define `apps` and `bundles`
+
+Go to the [README](example2/README.md)
+
+### Example3
+
+This example showcases `flavors`. Flavors are a meant to be opinionated towards a specific deployment stack. For example, a flavor could be written and maintained to be ran only on OpenStack. The person maintaining the flavor adds the specific bundles and apps that are required for that deployment.
+
+This is a powerful feature for the Enterprise which still works with a central IT organization.
+
+Go to the [README](example3/README.md)
 
 ## Developing your own app
 
-### Prepp
+### Preparations
 
 Download go modules.
 (These modules can later be used to generate CUE schemas)

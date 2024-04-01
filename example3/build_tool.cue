@@ -5,68 +5,43 @@ import (
 	"text/tabwriter"
 	"tool/cli"
 	// "tool/exec"
-	// "tool/file"
-	// "path"
-	// "encoding/yaml"
+	"tool/file"
+	"path"
+	"encoding/yaml"
 	"encoding/json"
+	// kubernetes "k8s.io/apimachinery/pkg/runtime"
 )
 
 #Clusters: [...]
 
-// command: xbuild: {
-// 	outDir: ".output"
-// 	for cl in #Clusters {
-// 		for k,v in cl.apps {
-// 			"\(cl.name)-\(cl.group)-\(k)": { // This is done to make it unique :)
-// 				clInstDir: path.Join([outDir, "\(cl.name)-\(cl.group)", "bundles"])
-// 				#splitS: strings.Split(url, "/")
-// 				name: #splitS[len(#splitS) - 1]
-// 				url: "\(v.source.url)"
-// 				tag: "\(v.source.tag)"
-// 				yamlFile: path.Join([clInstDir, "\(name).resources.yaml"])
-// 				bundleFile: path.Join([clInstDir, "\(name).bundle.cue"])
-
-// 				print: cli.Print & {
-// 					text: "Building bundle \(name) with version \(tag) to path (\(bundleFile))"
-// 				}
-// 				publishBundle: {
-// 					get: exec.Run & {
-// 						cmd: [ "timoni", "artifact", "pull", "\(url):\(tag)", "-o", "\(clInstDir)/"]
-// 					}
-// 					build: exec.Run & {
-// 						$dep: get.$done
-// 						cmd: [ "timoni", "bundle", "build", "-f", bundleFile, "-f", "config.cue"]
-// 						stdout: string
-// 						Out:    stdout
-// 					}
-// 					write: file.Create & {
-// 						$dep: build
-// 						filename: yamlFile
-// 						contents: build.Out
-// 					}
-// 					// publishArtifact exec.Run & {
-// 					// 	$dep: build
-// 					// 	cmd: [ "flux", "push", "artifact", "oci://localhost:5000/flux/:", "", "", "", "", "", ""]
-// 					// 	stdout: string
-// 					// 	Out:    stdout
-// 					// }
-// 				}
-// 			}
-// 		}
-// 	}
-// }
-
+command: view: {
+	outDir: ".output"
+	for cl in #Clusters {
+		_list: [for k, v in cl.resources {v}]
+		clusterDir: path.Join([outDir, "\(cl.name)-\(cl.role)"])
+		print: cli.Print & {
+			$after: _list
+			text:  yaml.MarshalStream(_list)
+		}
+	}
+}
 command: build: {
 	outDir: ".output"
 	for cl in #Clusters {
-		for k, v in cl.bundles {
-			for rk, rv in v.resources {
-				"\(cl.name)-\(cl.role)-\(k)-\(rk)": {
-					printRes: cli.Print & {
-						text: "\(rk) \t\(rv.metadata.namespace)"
-					}
-				}
-			}
+		_list: [for k, v in cl.resources {v}]
+		clusterDir: path.Join([outDir, "\(cl.name)-\(cl.role)"])
+		print: cli.Print & {
+			$after: _list
+			text: "Exporting resources to \(clusterDir)/"
+		}
+		mkdir: file.MkdirAll & {
+			$after: print
+			path:   "\(clusterDir)"
+		}
+		write: file.Create & {
+			$after:   mkdir
+			filename: "\(clusterDir)/resources.yaml"
+			contents: yaml.MarshalStream(_list)
 		}
 	}
 }
@@ -138,30 +113,14 @@ command: ls_resources: {
 				_resKind: rv.kind
 				_resLabels: json.Marshal(rv.metadata.labels)
 
-				if rv.targetNamespace == _|_ {
+				if rv.spec.targetNamespace == _|_ {
 					"\(_clName) \t\(_resName) \t\(_resNamespace) \t\(_resNamespace) \t\(_resKind) \t\(_resLabels)"
 				}
-				if rv.targetNamespace != _|_ {
-					_resTargetNamespace: rv.targetNamespace
+				if rv.spec.targetNamespace != _|_ {
+					_resTargetNamespace: rv.spec.targetNamespace
 					"\(_clName) \t\(_resName) \t\(_resNamespace) \t\(_resTargetNamespace) \t\(_resKind) \t\(_resLabels)"
 				}
 			}]
-			// items: [for cl in #Clusters for bk, bv in cl.bundles for rk, rv in bv.resources {
-			// 	_clName: "\(cl.name)-\(cl.role)"
-			// 	_bundleName: "\(bv.name)"
-			// 	_resName: rv.metadata.name
-			// 	_resNamespace: rv.metadata.namespace
-			// 	_resKind: rv.kind
-			// 	_resLabels: json.Marshal(rv.metadata.labels)
-
-			// 	if rv.targetNamespace == _|_ {
-			// 		"\(_clName) \t\(_bundleName) \t\(_resName) \t\(_resNamespace) \t\(_resNamespace) \t\(_resKind) \t\(_resLabels)"
-			// 	}
-			// 	if rv.targetNamespace != _|_ {
-			// 		_resTargetNamespace: rv.targetNamespace
-			// 		"\(_clName) \t\(_bundleName) \t\(_resName) \t\(_resNamespace) \t\(_resTargetNamespace) \t\(_resKind) \t\(_resLabels)"
-			// 	}
-			// }]
         }
         print: cli.Print & {
             $dep: gather

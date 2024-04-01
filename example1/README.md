@@ -1,25 +1,6 @@
 # Example 1
 
-## Summary
-
-This example showcases the `apps` feature. The cluster operator can define a set of apps with the value overrides.
-The apps will be unpacked and exported as yaml kubernetes manifests.
-
-## Prepp
-
-### Registry
-
-Pull and run a docker registry.
-
-```shell
-docker run -d -p 5000:5000 --restart always --name registry registry:2
-```
-
-Destroy registry to cleanup.
-
-```shell
-docker rm -f registry
-```
+## Preparations
 
 ### Cue
 
@@ -48,35 +29,43 @@ cd $WDIR/cue-modules/fluxv2
 cue mod tidy
 cue mod publish v1.0.0
 
-cd $WDIR/cue-modules/common
-cue mod tidy
-cue mod publish v0.2.0
-
 cd $WDIR/cue-modules/fluxcd
 cue mod tidy
-cue mod publish v0.2.0
-
-# Apps
-cd $WDIR/cue-apps/podinfo
-cue mod tidy
 cue mod publish v0.4.0
 
-cd $WDIR/cue-apps/grafana-operator
+cd $WDIR/cue-modules/bundle
 cue mod tidy
-cue mod publish v0.4.0
-
-cd $WDIR/cue-apps/prometheus
-cue mod tidy
-cue mod publish v0.4.0
-
-cd $WDIR/cue-apps/alertmanager
-cue mod tidy
-cue mod publish v0.4.0
+cue mod publish v0.8.0
 
 # Cluster
 cd $WDIR/cue-modules/clusterv0
 cue mod tidy
 cue mod publish v0.7.0
+
+# Apps
+cd $WDIR/cue-apps/podinfo
+cue mod tidy
+cue mod publish v0.6.0
+
+cd $WDIR/cue-apps/grafana-operator
+cue mod tidy
+cue mod publish v0.6.0
+
+cd $WDIR/cue-apps/prometheus
+cue mod tidy
+cue mod publish v0.6.0
+
+cd $WDIR/cue-apps/alertmanager
+cue mod tidy
+cue mod publish v0.6.0
+
+cd $WDIR/cue-apps/cilium
+cue mod tidy
+cue mod publish v0.7.0
+
+cd $WDIR/cue-apps/cinder-csi
+cue mod tidy
+cue mod publish v0.4.0
 ```
 
 ## Run example
@@ -84,13 +73,30 @@ cue mod publish v0.7.0
 Prepp
 
 ```shell
-cd $WDIR/example1
+cd $WDIR/example2
 cue mod tidy
 ```
 
-List all resources.
-This will go through all apps, bundles and flavors, unpack them into the individual apps and then list them.
+List all apps
 
 ```shell
-cue cmd ls
+cue cmd ls_apps
+```
+
+List all Kubernetes resources
+
+```shell
+cue cmd ls_resources
+```
+
+View the manifest output
+
+```shell
+cue cmd view
+```
+
+Build the resources and output to yaml
+
+```shell
+cue cmd build
 ```

@@ -7,7 +7,7 @@ import (
 #Bundle: #BundleConfig & {
     name:      *"example-1" | string
 	namespace: "bundle-\(name)"
-	labels:    {"bundle.example2/name": name}
+	labels:    {"bundle.example/name": name}
 	apps:      {...}
 	resources: [ID=_]:     kubernetes.#Object
     let _ns = namespace

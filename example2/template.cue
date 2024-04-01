@@ -20,18 +20,18 @@ import (
     bundles: {...}
 
 	resources: [ID=_]:     kubernetes.#Object
-    // let _labels = labels
+    let _labels = labels
 
     for k, v in apps {
         for rk, rv in v.resources {
             resources: "\(k)-\(rk)": rv
-            // resources: "\(k)-\(rk)": metadata: labels: _labels
+            resources: "\(k)-\(rk)": metadata: labels: _labels
         }
     }
     for k, v in bundles {
         for rk, rv in v.resources {
             resources: "\(k)-\(rk)": rv
-            // resources: "\(k)-\(rk)": metadata: labels: _labels
+            resources: "\(k)-\(rk)": metadata: labels: _labels
         }
     }
 }

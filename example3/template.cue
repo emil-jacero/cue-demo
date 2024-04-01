@@ -9,8 +9,8 @@ import (
     role:          *"prod" | "stage" | "dev"
     domainSuffix:  *"example.com" | string
     labels:        {
-        "cluster.example2/name": name
-        "cluster.example2/role": role
+        "cluster.example3/name": name
+        "cluster.example3/role": role
     }
     clusterOverrides: {
         clusterName:   *name | string

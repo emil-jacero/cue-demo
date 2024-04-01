@@ -13,7 +13,7 @@ deps: {
 		v: "v0.6.0"
 	}
 	"github.com/emil-jacero/cue-demo/modules/bundle@v0": {
-		v: "v0.7.0"
+		v: "v0.8.0"
 	}
 	"github.com/emil-jacero/cue-demo/modules/fluxcd@v0": {
 		v: "v0.4.0"

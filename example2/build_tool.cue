@@ -113,11 +113,11 @@ command: ls_resources: {
 				_resKind: rv.kind
 				_resLabels: json.Marshal(rv.metadata.labels)
 
-				if rv.targetNamespace == _|_ {
+				if rv.spec.targetNamespace == _|_ {
 					"\(_clName) \t\(_resName) \t\(_resNamespace) \t\(_resNamespace) \t\(_resKind) \t\(_resLabels)"
 				}
-				if rv.targetNamespace != _|_ {
-					_resTargetNamespace: rv.targetNamespace
+				if rv.spec.targetNamespace != _|_ {
+					_resTargetNamespace: rv.spec.targetNamespace
 					"\(_clName) \t\(_resName) \t\(_resNamespace) \t\(_resTargetNamespace) \t\(_resKind) \t\(_resLabels)"
 				}
 			}]

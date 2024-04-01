@@ -5,45 +5,65 @@ import (
 	"text/tabwriter"
 	"tool/cli"
 	// "tool/exec"
-	// "tool/file"
-	// "path"
+	"tool/file"
+	"path"
 	"encoding/yaml"
+	"encoding/json"
+	// kubernetes "k8s.io/apimachinery/pkg/runtime"
 )
 
 #Clusters: [...]
 
+command: view: {
+	outDir: ".output"
+	for cl in #Clusters {
+		_list: [for k, v in cl.resources {v}]
+		clusterDir: path.Join([outDir, "\(cl.name)-\(cl.role)"])
+		print: cli.Print & {
+			$after: _list
+			text:  yaml.MarshalStream(_list)
+		}
+	}
+}
 command: build: {
 	outDir: ".output"
 	for cl in #Clusters {
-		for k, v in cl.bundles {
-			for rk, rv in v.resources {
-				"\(cl.name)-\(cl.role)-\(k)-\(rk)": {
-					printRes: cli.Print & {
-						text: yaml.MarshalStream({rk, rv})
-					}
-				}
-			}
+		_list: [for k, v in cl.resources {v}]
+		clusterDir: path.Join([outDir, "\(cl.name)-\(cl.role)"])
+		print: cli.Print & {
+			$after: _list
+			text: "Exporting resources to \(clusterDir)/"
+		}
+		mkdir: file.MkdirAll & {
+			$after: print
+			path:   "\(clusterDir)"
+		}
+		write: file.Create & {
+			$after:   mkdir
+			filename: "\(clusterDir)/resources.yaml"
+			contents: yaml.MarshalStream(_list)
 		}
 	}
 }
 
-command: lsapps: {
+command: ls_apps: {
     task: {
-        gather: {
-            items: [for cl in #Clusters for k, v in cl.apps {
-				_cl_name: "\(cl.name)-\(cl.role)"
-				_app_name: "\(v.spec.name)"
-				_app_namespace: "\(v.spec.namespace)"
-				_app_chart_version: "\(v.spec.chart.version)"
-				_app_repository: "\(v.spec.repository.url)"
-				"\(_cl_name) \t\(_app_name) \t\(_app_namespace) \t\(_app_chart_version) \t\(_app_repository)"
-            }]
-        }
+		gatherApps: {
+			items: [for cl in #Clusters for ak, av in cl.apps {
+				_clName: "\(cl.name)-\(cl.role)"
+				_appName: "\(av.spec.name)"
+				_appNamespace: "\(av.spec.namespace)"
+				_appChartVersion: "\(av.spec.chart.version)"
+				_appRepository: "\(av.spec.repository.url)"
+				"\(_clName) \t \t\(_appName) \t\(_appNamespace) \t\(_appChartVersion) \t\(_appRepository)"
+			}]
+		}
         print: cli.Print & {
-            $dep: gather
+            $dep1: gatherApps
+			items: gatherApps.items
             text: tabwriter.Write([
-                "CLUSTER \tAPP \tNAMESPACE \tVERSION \tURL",
-                for a in gather.items {
+                "CLUSTER \tBUNDLE \tAPP \tNAMESPACE \tVERSION \tREPOSITORY",
+                for a in items {
                     "\(a)"
                 }
             ])
@@ -51,22 +71,29 @@ command: lsapps: {
     }
 }
 
-command: lsresources: {
+command: ls_resources: {
     task: {
         gather: {
-            items: [for cl in #Clusters for k, v in cl.apps for rs_k, rs_v in v.resources {
-				_cl_name: "\(cl.name)-\(cl.role)"
-				_app_name: "\(v.spec.name)"
-				_app_namespace: "\(v.spec.namespace)"
-				_rs_name: "\(rs_k)"
-				_rs_ns: "\(rs_v.kind)"
-				"\(_cl_name) \t\(_app_name) \t\(_app_namespace) \t\(_rs_name) \t\(_rs_ns)"
-            }]
+			items: [for cl in #Clusters for rk, rv in cl.resources {
+				_clName: "\(cl.name)-\(cl.role)"
+				_resName: rv.metadata.name
+				_resNamespace: rv.metadata.namespace
+				_resKind: rv.kind
+				_resLabels: json.Marshal(rv.metadata.labels)
+
+				if rv.spec.targetNamespace == _|_ {
+					"\(_clName) \t\(_resName) \t\(_resNamespace) \t\(_resNamespace) \t\(_resKind) \t\(_resLabels)"
+				}
+				if rv.spec.targetNamespace != _|_ {
+					_resTargetNamespace: rv.spec.targetNamespace
+					"\(_clName) \t\(_resName) \t\(_resNamespace) \t\(_resTargetNamespace) \t\(_resKind) \t\(_resLabels)"
+				}
+			}]
         }
         print: cli.Print & {
             $dep: gather
             text: tabwriter.Write([
-                "CLUSTER \tAPP \tNAMESPACE \tRESOURCE \tKIND",
+                "CLUSTER \tRESOURCE \tNAMESPACE \tTARGETNAMESPACE \tKIND \tLABELS",
                 for a in gather.items {
                     "\(a)"
                 }
