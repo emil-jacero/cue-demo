@@ -17,31 +17,36 @@ import (
 command: view: {
 	outDir: ".output"
 	for cl in #Clusters {
-		_list: [for k, v in cl.resources {v}]
-		clusterDir: path.Join([outDir, "\(cl.name)-\(cl.role)"])
-		print: cli.Print & {
-			$after: _list
-			text:  yaml.MarshalStream(_list)
+		"\(cl.name)-\(cl.role)": {
+			_list: [for k, v in cl.resources {v}]
+			clusterDir: path.Join([outDir, "\(cl.name)-\(cl.role)"])
+			print: cli.Print & {
+				$after: _list
+				text:  yaml.MarshalStream(_list)
+			}
 		}
 	}
 }
+
 command: build: {
 	outDir: ".output"
 	for cl in #Clusters {
-		_list: [for k, v in cl.resources {v}]
-		clusterDir: path.Join([outDir, "\(cl.name)-\(cl.role)"])
-		print: cli.Print & {
-			$after: _list
-			text: "Exporting resources to \(clusterDir)/"
-		}
-		mkdir: file.MkdirAll & {
-			$after: print
-			path:   "\(clusterDir)"
-		}
-		write: file.Create & {
-			$after:   mkdir
-			filename: "\(clusterDir)/resources.yaml"
-			contents: yaml.MarshalStream(_list)
+		"\(cl.name)-\(cl.role)": {
+			_list: [for k, v in cl.resources {v}]
+			clusterDir: path.Join([outDir, "\(cl.name)-\(cl.role)"])
+			print: cli.Print & {
+				$after: _list
+				text: "Exporting resources to \(clusterDir)/"
+			}
+			mkdir: file.MkdirAll & {
+				$after: print
+				path:   "\(clusterDir)"
+			}
+			write: file.Create & {
+				$after:   mkdir
+				filename: "\(clusterDir)/resources.yaml"
+				contents: yaml.MarshalStream(_list)
+			}
 		}
 	}
 }
@@ -66,6 +71,7 @@ command: ls_bundles: {
     }
 }
 
+// TODO: Add sorting by cluster
 command: ls_apps: {
     task: {
 		gatherApps: {

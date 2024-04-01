@@ -17,35 +17,41 @@ import (
 command: view: {
 	outDir: ".output"
 	for cl in #Clusters {
-		_list: [for k, v in cl.resources {v}]
-		clusterDir: path.Join([outDir, "\(cl.name)-\(cl.role)"])
-		print: cli.Print & {
-			$after: _list
-			text:  yaml.MarshalStream(_list)
-		}
-	}
-}
-command: build: {
-	outDir: ".output"
-	for cl in #Clusters {
-		_list: [for k, v in cl.resources {v}]
-		clusterDir: path.Join([outDir, "\(cl.name)-\(cl.role)"])
-		print: cli.Print & {
-			$after: _list
-			text: "Exporting resources to \(clusterDir)/"
-		}
-		mkdir: file.MkdirAll & {
-			$after: print
-			path:   "\(clusterDir)"
-		}
-		write: file.Create & {
-			$after:   mkdir
-			filename: "\(clusterDir)/resources.yaml"
-			contents: yaml.MarshalStream(_list)
+		"\(cl.name)-\(cl.role)": {
+			_list: [for k, v in cl.resources {v}]
+			clusterDir: path.Join([outDir, "\(cl.name)-\(cl.role)"])
+			print: cli.Print & {
+				$after: _list
+				text:  yaml.MarshalStream(_list)
+			}
 		}
 	}
 }
 
+command: build: {
+	outDir: ".output"
+	for cl in #Clusters {
+		"\(cl.name)-\(cl.role)": {
+			_list: [for k, v in cl.resources {v}]
+			clusterDir: path.Join([outDir, "\(cl.name)-\(cl.role)"])
+			print: cli.Print & {
+				$after: _list
+				text: "Exporting resources to \(clusterDir)/"
+			}
+			mkdir: file.MkdirAll & {
+				$after: print
+				path:   "\(clusterDir)"
+			}
+			write: file.Create & {
+				$after:   mkdir
+				filename: "\(clusterDir)/resources.yaml"
+				contents: yaml.MarshalStream(_list)
+			}
+		}
+	}
+}
+
+// TODO: Add sorting by cluster
 command: ls_apps: {
     task: {
 		gatherApps: {
@@ -58,9 +64,21 @@ command: ls_apps: {
 				"\(_clName) \t \t\(_appName) \t\(_appNamespace) \t\(_appChartVersion) \t\(_appRepository)"
 			}]
 		}
+        gatherBundles: {
+			items: [for cl in #Clusters for bk, bv in cl.bundles for ak, av in bv.apps {
+				_clName: "\(cl.name)-\(cl.role)"
+				_bundleName: "\(bv.name)"
+				_appName: "\(av.spec.name)"
+				_appNamespace: "\(av.spec.namespace)"
+				_appChartVersion: "\(av.spec.chart.version)"
+				_appRepository: "\(av.spec.repository.url)"
+				"\(_clName) \t\(_bundleName) \t\(_appName) \t\(_appNamespace) \t\(_appChartVersion) \t\(_appRepository)"
+			}]
+        }
         print: cli.Print & {
             $dep1: gatherApps
-			items: gatherApps.items
+            $dep2: gatherBundles
+			items: gatherApps.items + gatherBundles.items
             text: tabwriter.Write([
                 "CLUSTER \tBUNDLE \tAPP \tNAMESPACE \tVERSION \tREPOSITORY",
                 for a in items {
