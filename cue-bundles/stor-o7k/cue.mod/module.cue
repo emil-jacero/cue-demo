@@ -4,7 +4,7 @@ language: {
 }
 deps: {
 	"github.com/emil-jacero/cue-demo/apps/cinder_csi@v0": {
-		v: "v0.6.0"
+		v: "v0.7.0"
 	}
 	"github.com/emil-jacero/cue-demo/modules/bundle@v0": {
 		v: "v0.8.0"

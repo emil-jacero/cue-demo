@@ -10,13 +10,13 @@ deps: {
 		v: "v0.7.0"
 	}
 	"github.com/emil-jacero/cue-demo/apps/cinder_csi@v0": {
-		v: "v0.6.0"
+		v: "v0.7.0"
 	}
 	"github.com/emil-jacero/cue-demo/apps/grafanaoperator@v0": {
 		v: "v0.6.0"
 	}
 	"github.com/emil-jacero/cue-demo/apps/podinfo@v0": {
-		v: "v0.6.0"
+		v: "v0.7.0"
 	}
 	"github.com/emil-jacero/cue-demo/apps/prometheus@v0": {
 		v: "v0.6.0"
