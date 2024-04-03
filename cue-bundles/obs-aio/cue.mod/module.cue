@@ -4,13 +4,13 @@ language: {
 }
 deps: {
 	"github.com/emil-jacero/cue-demo/apps/alertmanager@v0": {
-		v: "v0.6.0"
+		v: "v0.7.0"
 	}
 	"github.com/emil-jacero/cue-demo/apps/grafanaoperator@v0": {
-		v: "v0.6.0"
+		v: "v0.7.0"
 	}
 	"github.com/emil-jacero/cue-demo/apps/prometheus@v0": {
-		v: "v0.6.0"
+		v: "v0.7.0"
 	}
 	"github.com/emil-jacero/cue-demo/modules/bundle@v0": {
 		v: "v0.8.0"

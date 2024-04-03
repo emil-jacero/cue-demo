@@ -56,4 +56,6 @@ import (
 	if spec.repository.password != "" {
 		resources: "\(spec.name)-reposecret": #HelmSecret & {_spec: spec}
 	}
+
+	resources: "\(spec.name)-namespace": #Namespace & {_spec: spec}
 }

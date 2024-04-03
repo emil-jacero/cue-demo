@@ -84,7 +84,7 @@ docker run -d -p 5000:5000 --restart always --name registry registry:2
 Destroy registry to cleanup.
 
 ```shell
-docker rm -f reg
+docker rm -f registry
 ```
 
 ### Example1
